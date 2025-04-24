@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "862219094987",
+    "firebase_url": "https://ubride-2cbac-default-rtdb.firebaseio.com",
+    "project_id": "ubride-2cbac",
+    "storage_bucket": "ubride-2cbac.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862219094987:android:aef5e2a1ebbf562521c44e",
+        "android_client_info": {
+          "package_name": "com.example.drivers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaY0FnIWdlCQ1pbqfnaiNxnLB4wn0lX_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862219094987:android:8375e6bbdc53956821c44e",
+        "android_client_info": {
+          "package_name": "com.example.user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaY0FnIWdlCQ1pbqfnaiNxnLB4wn0lX_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
