@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:drivers/Assistants/assistant_methods.dart';
 import 'package:drivers/global/global.dart';
+import 'package:drivers/pushNotification/push_notification_system.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart'; 
 
 class HomeTabPage extends StatefulWidget {
   const HomeTabPage({super.key});
@@ -73,6 +74,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
         onlineDriverData.car_model = (snap.snapshot.value as Map)["car_details"]["car_model"];
         onlineDriverData.car_number = (snap.snapshot.value as Map)["car_details"]["car_number"];
         onlineDriverData.car_color = (snap.snapshot.value as Map)["car_details"]["car_color"];
+        onlineDriverData.car_type = (snap.snapshot.value as Map)["car_details"]["type"];
 
         driverVehicleType = (snap.snapshot.value as Map)["car_details"]["type"];
       }
@@ -86,6 +88,10 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
     checkIfLocationPermissionAllowed();
     readCurrentDriverInformation();
+
+    PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
+    pushNotificationSystem.initializeCloudMessaging(context);
+    pushNotificationSystem.generateAndGetToken();
   }
 
   @override
@@ -172,21 +178,42 @@ class _HomeTabPageState extends State<HomeTabPage> {
     );
   }
 
+  // driverIsOnlineNow() async {
+  //   Position pos = await Geolocator.getCurrentPosition(
+  //     desiredAccuracy: LocationAccuracy.high,
+  //   );
+
+  //   driverCurrentPosition = pos;
+
+  //   Geofire.initialize("activeDrivers");
+  //   Geofire.setLocation(currentUser!.uid, driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
+
+  //   DatabaseReference ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
+
+  //   ref.set("idle");
+  //   ref.onValue.listen((event){ });
+  // }
+
   driverIsOnlineNow() async {
-    Position pos = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+  Position pos = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+  );
 
-    driverCurrentPosition = pos;
+  driverCurrentPosition = pos;
 
-    Geofire.initialize("activeDrivers");
-    Geofire.setLocation(currentUser!.uid, driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
+  // Initialize Geofire and set the driver's location
+  Geofire.initialize("activeDrivers");
+  Geofire.setLocation(currentUser!.uid, driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
 
-    DatabaseReference ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
+  // Set the driver's status to online
+  DatabaseReference ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
+  ref.set("idle");
 
-    ref.set("idle");
-    ref.onValue.listen((event){ });
-  }
+  // Listen for changes in ride status if needed
+  ref.onValue.listen((event) {
+    // You can handle updates here if needed.
+  });
+}
 
   updateDriversLocationAtRealTime(){
     streamSubscriptionPosition = Geolocator.getPositionStream().listen((Position position) {
@@ -200,17 +227,33 @@ class _HomeTabPageState extends State<HomeTabPage> {
     });
   }
 
-  driverIsOfflineNow() {
-    Geofire.removeLocation(currentUser!.uid);
+  // driverIsOfflineNow() {
+  //   Geofire.removeLocation(currentUser!.uid);
 
-    DatabaseReference? ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
+  //   DatabaseReference? ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
 
-    ref.onDisconnect();
-    ref.remove();
-    ref = null;
+  //   ref.onDisconnect();
+  //   ref.remove();
+  //   ref = null;
 
-    Future.delayed(Duration(milliseconds: 2000), (){
-      SystemChannels.platform.invokeMethod("SystemNavigator.pop");
-    });
-  }
+  //   // Future.delayed(Duration(milliseconds: 2000), (){
+  //   //   SystemChannels.platform.invokeMethod("SystemNavigator.pop");
+  //   // });
+  // }
+
+  driverIsOfflineNow() async {
+  // Remove driver's location from Geofire (making them inactive)
+  Geofire.removeLocation(currentUser!.uid);
+
+  // Remove the driver's status from Firebase indicating they are offline
+  DatabaseReference ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
+  ref.remove(); // Remove the ride status entry to mark them offline
+
+  // Optionally remove any other data related to the driver's active status.
+  FirebaseDatabase.instance.ref().child("activeDrivers").child(currentUser!.uid).remove(); // To delete active driver entry
+
+  // You can call Fluttertoast to notify the user that they are now offline
+  Fluttertoast.showToast(msg: "You are offline now");
 }
+}
+

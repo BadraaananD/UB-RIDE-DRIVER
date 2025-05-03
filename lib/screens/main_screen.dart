@@ -27,10 +27,10 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   void initState(){
     super.initState();
 
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
   }
 
-  @override
+  @override 
   Widget build(BuildContext context) {
 
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -43,15 +43,15 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           HomeTabPage(),
           // EarningTabPage(),
           // RatingsTabPage(),
-          ProfileTabPage(),
+          // ProfileTabPage(),
         ],
       ),
 
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          // BottomNavigationBarItem(icon: Icon(Icons.credit_card), label: "Earnings"),
-          // // BottomNavigationBarItem(icon: Icon(Icons.star), label: "Ratings"),
+          BottomNavigationBarItem(icon: Icon(Icons.credit_card), label: "Earnings"),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Ratings"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
         ],
         
