@@ -2,6 +2,7 @@
 import 'package:drivers/Assistants/assistant_methods.dart';
 import 'package:drivers/global/global.dart';
 import 'package:drivers/models/user_ride_request_information.dart';
+import 'package:drivers/screens/new_trip_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -190,7 +191,9 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
           AssistantMethods.pauseLiveLocationUpdates();
 
           // trip started now - send driver to new tripScreen
-          // Navigator.push(context, MaterialPageRoute(builder: (c) => NewTripScreen())); //сая коммент хийсэн
+          Navigator.push(context, MaterialPageRoute(builder: (c) => NewTripScreen(
+            userRideRequestDetails: widget.userRideRequestDetails,
+          ))); 
         }
         else {
           Fluttertoast.showToast(msg: "This Ride Request do not exists.");

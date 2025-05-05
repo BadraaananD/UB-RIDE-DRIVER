@@ -38,6 +38,7 @@
 
 import 'package:drivers/Assistants/assistant_methods.dart';
 import 'package:drivers/screens/car_info_screen.dart';
+import 'package:drivers/widgets/fare_amount_collection_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class MyApp extends StatelessWidget {
         theme: MyThemes.lightTheme,
         darkTheme: MyThemes.darkTheme,
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: SplashScreen(),
       ),
     );
   }
