@@ -32,28 +32,56 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
     currentUser = FirebaseAuth.instance.currentUser;
   }
 
-  _submit(){
-    if(_formKey.currentState!.validate()){
+  // _submit(){
+  //   if(_formKey.currentState!.validate()){
 
-      if (currentUser == null) {
-      Fluttertoast.showToast(msg: "User not logged in. Please log in again.");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => RegisterScreen())); // Or your login screen
+  //     if (currentUser == null) {
+  //     Fluttertoast.showToast(msg: "User not logged in. Please log in again.");
+  //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => RegisterScreen())); // Or your login screen
+  //     return;
+  //   }
+
+  //     Map driverCarInfoMap = {
+  //       "car_model": carModelTextEditingController.text.trim(),
+  //       "car_number": carNumberTextEditingController.text.trim(),
+  //       "car_color": carColorTextEditingController.text.trim(),
+  //     };
+
+  //     DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers");
+  //     userRef.child(currentUser!.uid).child("car_details").set(driverCarInfoMap);
+
+  //     Fluttertoast.showToast(msg: "Car details has been saved. Congratulations");
+  //     Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
+  //   }
+  // }
+
+  _submit() {
+  if (_formKey.currentState!.validate()) {
+    if (selectedCarType == null) {
+      Fluttertoast.showToast(msg: "Please select a car type");
       return;
     }
 
-      Map driverCarInfoMap = {
-        "car_model": carModelTextEditingController.text.trim(),
-        "car_number": carNumberTextEditingController.text.trim(),
-        "car_color": carColorTextEditingController.text.trim(),
-      };
-
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers");
-      userRef.child(currentUser!.uid).child("car_details").set(driverCarInfoMap);
-
-      Fluttertoast.showToast(msg: "Car details has been saved. Congratulations");
-      Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
+    if (currentUser == null) {
+      Fluttertoast.showToast(msg: "User not logged in. Please log in again.");
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => RegisterScreen()));
+      return;
     }
+
+    Map driverCarInfoMap = {
+      "car_model": carModelTextEditingController.text.trim(),
+      "car_number": carNumberTextEditingController.text.trim(),
+      "car_color": carColorTextEditingController.text.trim(),
+      "type": selectedCarType, // Добавляем тип автомобиля
+    };
+
+    DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers");
+    userRef.child(currentUser!.uid).child("car_details").set(driverCarInfoMap);
+
+    Fluttertoast.showToast(msg: "Car details have been saved. Congratulations");
+    Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -95,36 +123,36 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             TextFormField(
+                              controller: carModelTextEditingController,
                               inputFormatters: [
-                                LengthLimitingTextInputFormatter(50)
+                                LengthLimitingTextInputFormatter(50),
                               ],
                               decoration: InputDecoration(
                                 hintText: "Car Model",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
+                                hintStyle: TextStyle(color: Colors.grey),
                                 filled: true,
                                 fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
-                                border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
-                                  borderRadius: BorderRadius.circular(40), // <-- Исправлено
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(40),
                                   borderSide: BorderSide(
                                     width: 0,
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.directions_car, color: darkTheme ? Colors.amber.shade400 : Colors.grey),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
-                                if(text == null || text.isEmpty){
-                                  return "Name can\'t be empty";
+                                if (text == null || text.isEmpty) {
+                                  return "Car model can't be empty";
                                 }
-                                if(text.length < 2){
-                                  return "Please enter a valid name";
+                                if (text.length < 2) {
+                                  return "Please enter a valid car model";
                                 }
-                                if(text.length > 49){
-                                  return "Name can\'t be more than 50";
+                                if (text.length > 49) {
+                                  return "Car model can't be more than 50 characters";
                                 }
+                                return null;
                               },
                               onChanged: (text) => setState(() {
                                 carModelTextEditingController.text = text;
