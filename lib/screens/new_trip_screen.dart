@@ -486,59 +486,77 @@ class _NewTripScreenState extends State<NewTripScreen> {
                       SizedBox(height: 10,),
                       
                       ElevatedButton.icon(
-                        onPressed: () async {
-                          //[driver has arrived at user PickUp Location] - Arrived Button
-                          if(rideRequestStatus == "accepted"){
-                            rideRequestStatus = "arrived";
+                      onPressed: () async {
+                        // Ваш существующий код для обработки нажатий
+                        if (rideRequestStatus == "accepted") {
+                          rideRequestStatus = "arrived";
+                          FirebaseDatabase.instance
+                              .ref()
+                              .child("All Ride Requests")
+                              .child(widget.userRideRequestDetails!.rideRequestId!)
+                              .child("status")
+                              .set(rideRequestStatus);
 
-                            FirebaseDatabase.instance.ref().child("All Ride Requests").child(widget.userRideRequestDetails!.rideRequestId!).child("status").set(rideRequestStatus);
+                          setState(() {
+                            buttonTitle = "Let's Go";
+                            buttonColor = Colors.lightGreen;
+                          });
 
-                            setState(() {
-                              buttonTitle = "Let's Go";
-                              buttonColor = Colors.lightGreen;
-                            });
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) => ProgressDialog(message: "Loading..."),
+                          );
 
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) => ProgressDialog(message: "Loading...",)
-                            );
+                          await drawPolyLineFromOriginToDestination(
+                            widget.userRideRequestDetails!.originLatLng!,
+                            widget.userRideRequestDetails!.destinationLatLng!,
+                            darkTheme,
+                          );
 
-                            await drawPolyLineFromOriginToDestination(
-                              widget.userRideRequestDetails!.originLatLng!,
-                              widget.userRideRequestDetails!.destinationLatLng!,
-                              darkTheme
-                            );
+                          Navigator.pop(context);
+                        } else if (rideRequestStatus == "arrived") {
+                          rideRequestStatus = "ontrip";
+                          FirebaseDatabase.instance
+                              .ref()
+                              .child("All Ride Requests")
+                              .child(widget.userRideRequestDetails!.rideRequestId!)
+                              .child("status")
+                              .set(rideRequestStatus);
 
-                            Navigator.pop(context);
-                          }
-                          //[user has been picked from the user's current location] - Let's Go Button
-                          else if(rideRequestStatus == "arrived"){
-                            rideRequestStatus = "ontrip";
-
-                            FirebaseDatabase.instance.ref().child("All Ride Requests").child(widget.userRideRequestDetails!.rideRequestId!).child("status").set(rideRequestStatus);
-
-                            setState(() {
-                              buttonTitle = "End Trip";
-                              buttonColor = Colors.red;
-                            });
-                          }
-                          // [user/driver has reached the drop-off location] - End Trip Button
-                          else if(rideRequestStatus == "ontrip"){
-                            endTripNow();
-                          }
-
-                        },
-                        icon: Icon(Icons.directions_car, color: darkTheme ? Colors.black : Colors.white, size: 25,),
-                        label: Text(
-                          buttonTitle!,
-                          style: TextStyle(
-                            color: darkTheme ? Colors.black : Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                          setState(() {
+                            buttonTitle = "End Trip";
+                            buttonColor = Colors.red;
+                          });
+                        } else if (rideRequestStatus == "ontrip") {
+                          endTripNow();
+                        }
+                      },
+                      icon: Icon(
+                        Icons.directions_car,
+                        color: darkTheme ? Colors.black : Colors.white,
+                        size: 25,
                       ),
+                      label: Text(
+                        buttonTitle!,
+                        style: TextStyle(
+                          color: darkTheme ? Colors.black : Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: buttonColor, // Основной цвет кнопки
+                        foregroundColor: darkTheme ? Colors.black : Colors.white, // Цвет текста/иконки
+                        shadowColor: Colors.black54, // Цвет тени
+                        elevation: 5, // Высота кнопки
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // Скругление углов
+                        ),
+                        // Убираем эффект наложения при нажатии
+                        overlayColor: buttonColor?.withOpacity(0.3), // Цвет при нажатии
+                      ),
+                    ),
                     ],
                   ),
                   ),
