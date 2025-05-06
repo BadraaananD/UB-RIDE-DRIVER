@@ -1,7 +1,9 @@
 import 'package:drivers/global/global.dart';
 import 'package:drivers/splashScreen/splash_screen.dart';
+import 'package:drivers/tabPages/earning_tab.dart';
 import 'package:drivers/tabPages/home_tab.dart';
 import 'package:drivers/tabPages/profile_tab.dart';
+import 'package:drivers/tabPages/ratings_tab.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -41,9 +43,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         controller: tabController,
         children: [
           HomeTabPage(),
-          // EarningTabPage(),
-          // RatingsTabPage(),
-          // ProfileTabPage(),
+          EarningsTabPage(),
+          RatingsTabPage(),
+          ProfileTabPage(),
         ],
       ),
 
