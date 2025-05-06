@@ -203,7 +203,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
       //updating driver location at real time in database
       Map driverLatLngDataMap = {
         "latitude": onlineDriverCurrentPosition!.latitude.toString(),
-        "longitute": onlineDriverCurrentPosition!.longitude.toString(),
+        "longitude": onlineDriverCurrentPosition!.longitude.toString(),
       };
       FirebaseDatabase.instance.ref().child("All Ride Requests").child(widget.userRideRequestDetails!.rideRequestId!).child("driverLocation").set(driverLatLngDataMap);
 
@@ -256,7 +256,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
     Map driverLocationDataMap = {
       "latitude": driverCurrentPosition!.latitude.toString(),
-      "longitute": driverCurrentPosition!.longitude.toString(),
+      "longitude": driverCurrentPosition!.longitude.toString(),
     };
 
     if(databaseReference.child("driverId") != "waiting"){

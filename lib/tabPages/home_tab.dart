@@ -218,6 +218,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
   updateDriversLocationAtRealTime(){
     streamSubscriptionPosition = Geolocator.getPositionStream().listen((Position position) {
       if(isDriverActive == true){
+        driverCurrentPosition = position;
         Geofire.setLocation(currentUser!.uid, driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
       }
 
