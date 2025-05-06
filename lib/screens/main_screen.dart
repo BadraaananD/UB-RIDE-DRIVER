@@ -51,10 +51,10 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.credit_card), label: "Earnings"),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Ratings"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Нүүр"),
+          BottomNavigationBarItem(icon: Icon(Icons.credit_card), label: "Орлого"),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Үнэлгээ"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Бүртгэл "),
         ],
         
         unselectedItemColor: darkTheme ?  Colors.black54 : Colors.white54,

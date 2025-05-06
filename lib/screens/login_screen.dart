@@ -43,23 +43,23 @@ class _LoginScreenState extends State<LoginScreen>{
               currentUser = auth.user;
               // currentUser = FirebaseAuth.instance.currentUser;
 
-              await Fluttertoast.showToast(msg: "Successfully Logged In");
+              await Fluttertoast.showToast(msg: "Амжилттай нэвтэрлээ");
               Navigator.push(context, MaterialPageRoute(builder: (c) => MainScreen()));
               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => MainScreen()));
 
             }
             else {
-              await Fluttertoast.showToast(msg: "No record exist with this email");
+              await Fluttertoast.showToast(msg: "Энэ имэйлд бүртгэл байхгүй байна");
               firebaseAuth.signOut();
               Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
             }
           });
         }).catchError((errorMessage) {
-          Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
+          Fluttertoast.showToast(msg: "Алдаа гарлаа: \n $errorMessage");
         });
     }
     else {
-      Fluttertoast.showToast(msg: "Not all field are valid");
+      Fluttertoast.showToast(msg: "Зарим талбар буруу байна");
     }
   } 
 
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen>{
                 SizedBox(height: 20),
 
                 Text(
-                  'Login',
+                  'Нэвтрэх',
                   style: TextStyle(
                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                     fontSize: 25,
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                 LengthLimitingTextInputFormatter(100)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Email",
+                                hintText: "Имэйл",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -125,16 +125,16 @@ class _LoginScreenState extends State<LoginScreen>{
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Email can\'t be empty";
+                                  return "Имэйл хоосон байж болохгүй";
                                 }
                                 if(EmailValidator.validate(text) == true){
                                   return null;
                                 }
                                 if(text.length < 2){
-                                  return "Please enter a valid email";
+                                  return "Хүчинтэй имэйл оруулна уу";
                                 }
-                                if(text.length > 49){
-                                  return "Email can\'t be more than 100";
+                                if(text.length > 100){
+                                  return "Имэйл 100-с их тэмдэгт байж болохгүй";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Password",
+                                hintText: "Нууц үг",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -180,13 +180,13 @@ class _LoginScreenState extends State<LoginScreen>{
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Password can\'t be empty";
+                                  return "Нууц үг хоосон байж болохгүй";
                                 }
                                 if(text.length < 6){
-                                  return "Please enter a valid Password";
+                                  return "Хүчинтэй нууц үг оруулна уу";
                                 }
                                 if(text.length > 49){
-                                  return "Password can\'t be more than 50";
+                                  return "Нууц үг 50-с илүү тэмдэгт байж болохгүй";
                                 }
                                 return null;
                               },
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen>{
                            _submit(); 
                         },
                          child: Text(
-                          "Login",
+                          "Нэвтрэх",
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -224,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen>{
                             Navigator.push(context, MaterialPageRoute(builder: (c) => ForgotPasswordScreen()));
                           },
                           child: Text(
-                            "Forgot Password?",
+                            "Нууц үгээ мартсан уу?",
                             style: TextStyle(
                               color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                             ),
@@ -237,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen>{
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Doesn't have an account?",
+                                "Бүртгэлгүй юу?",
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15,
@@ -251,7 +251,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                   Navigator.push(context, MaterialPageRoute(builder: (c) => RegisterScreen()));
                                 },
                                 child: Text(
-                                  "Register",
+                                  "Бүртгүүлэх",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,

@@ -1,12 +1,12 @@
 import 'package:drivers/screens/car_info_screen.dart';
+import 'package:drivers/screens/forgot_password_screen.dart';
+import 'package:drivers/screens/login_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:drivers/global/global.dart';
-import 'package:drivers/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -55,14 +55,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             userRef.child(currentUser!.uid).set(userMap);
 
           }
-          await Fluttertoast.showToast(msg: "Successfully Registered");
+          await Fluttertoast.showToast(msg: "Амжилттай бүртгүүллээ");
           Navigator.push(context, MaterialPageRoute(builder: (c) => CarInfoScreen()));
         }).catchError((errorMessage) {
-          Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
+          Fluttertoast.showToast(msg: "Алдаа гарлаа: \n $errorMessage");
         });
     }
     else {
-      Fluttertoast.showToast(msg: "Not all field are valid");
+      Fluttertoast.showToast(msg: "Зарим талбар буруу байна");
     }
   }
 
@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(height: 20),
 
                 Text(
-                  'Register',
+                  'Бүртгүүлэх',
                   style: TextStyle(
                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                     fontSize: 25,
@@ -110,7 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Name",
+                                hintText: "Нэр",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -128,13 +128,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Name can\'t be empty";
+                                  return "Нэр хоосон байж болохгүй";
                                 }
                                 if(text.length < 2){
-                                  return "Please enter a valid name";
+                                  return "Зөв нэр оруулна уу";
                                 }
                                 if(text.length > 49){
-                                  return "Name can\'t be more than 50";
+                                  return "Нэр 50 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -149,7 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 LengthLimitingTextInputFormatter(100)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Email",
+                                hintText: "Имэйл",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -167,16 +167,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Email can\'t be empty";
+                                  return "Имэйл хоосон байж болохгүй";
                                 }
                                 if(EmailValidator.validate(text) == true){
                                   return null;
                                 }
                                 if(text.length < 2){
-                                  return "Please enter a valid email";
+                                  return "Зөв имэйл хаяг оруулна уу";
                                 }
-                                if(text.length > 49){
-                                  return "Email can\'t be more than 100";
+                                if(text.length > 100){
+                                  return "Имэйл 100 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -193,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: darkTheme ? Colors.amber.shade400 : Colors.grey,
                               ),
                               decoration: InputDecoration(
-                                hintText: "Phone number",
+                                hintText: "Утасны дугаар",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -219,7 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 LengthLimitingTextInputFormatter(100)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Address",
+                                hintText: "Хаяг",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -237,13 +237,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Address can\'t be empty";
+                                  return "Хаяг хоосон байж болохгүй";
                                 }
                                 if(text.length < 2){
-                                  return "Please enter a valid address";
+                                  return "Зөв хаяг оруулна уу";
                                 }
                                 if(text.length > 49){
-                                  return "Address can\'t be more than 100";
+                                  return "Хаяг 100 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -259,7 +259,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Password",
+                                hintText: "Нууц үг",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -289,13 +289,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Password can\'t be empty";
+                                  return "Нууц үг хоосон байж болохгүй";
                                 }
                                 if(text.length < 6){
-                                  return "Please enter a valid Password";
+                                  return "Зөв нууц үг оруулна уу";
                                 }
                                 if(text.length > 49){
-                                  return "Password can\'t be more than 50";
+                                  return "Нууц үг 50 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                                 return null;
                               },
@@ -312,7 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Confirm Password",
+                                hintText: "Нууц үг баталгаажуулах",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -342,16 +342,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Confirm Password can\'t be empty";
+                                  return "Нууц үг баталгаажуулах талбар хоосон байж болохгүй";
                                 }
                                 if(text != passwordTextEditingController.text){
-                                  return "Password do not match";
+                                  return "Нууц үг тохирохгүй байна";
                                 }
                                 if(text.length < 6){
-                                  return "Please enter a valid Password";
+                                  return "Зөв нууц үг оруулна уу";
                                 }
                                 if(text.length > 49){
-                                  return "Password can\'t be more than 50";
+                                  return "Нууц үг 50 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                                 return null;
                               },
@@ -378,7 +378,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                            _submit(); 
                         },
                          child: Text(
-                          "Register",
+                          "Бүртгүүлэх",
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -388,9 +388,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                          SizedBox(height: 20,),
 
                          GestureDetector(
-                          onTap: (){},
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (c) => ForgotPasswordScreen()));
+                          },
                           child: Text(
-                            "Forgot Password?",
+                            "Нууц үгээ мартсан уу?",
                             style: TextStyle(
                               color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                             ),
@@ -403,7 +405,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Have an account?",
+                                "Та бүртгэлтэй юу?",
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15,
@@ -414,9 +416,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                               GestureDetector(
                                 onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (c) => LoginScreen()));
                                 },
                                 child: Text(
-                                  "Sign In",
+                                  "Нэвтрэх",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,

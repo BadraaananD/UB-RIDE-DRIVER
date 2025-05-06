@@ -32,38 +32,15 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
     currentUser = FirebaseAuth.instance.currentUser;
   }
 
-  // _submit(){
-  //   if(_formKey.currentState!.validate()){
-
-  //     if (currentUser == null) {
-  //     Fluttertoast.showToast(msg: "User not logged in. Please log in again.");
-  //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => RegisterScreen())); // Or your login screen
-  //     return;
-  //   }
-
-  //     Map driverCarInfoMap = {
-  //       "car_model": carModelTextEditingController.text.trim(),
-  //       "car_number": carNumberTextEditingController.text.trim(),
-  //       "car_color": carColorTextEditingController.text.trim(),
-  //     };
-
-  //     DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers");
-  //     userRef.child(currentUser!.uid).child("car_details").set(driverCarInfoMap);
-
-  //     Fluttertoast.showToast(msg: "Car details has been saved. Congratulations");
-  //     Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
-  //   }
-  // }
-
   _submit() {
   if (_formKey.currentState!.validate()) {
     if (selectedCarType == null) {
-      Fluttertoast.showToast(msg: "Please select a car type");
+      Fluttertoast.showToast(msg: "Машины төрөл сонгоно уу");
       return;
     }
 
     if (currentUser == null) {
-      Fluttertoast.showToast(msg: "User not logged in. Please log in again.");
+      Fluttertoast.showToast(msg: "Хэрэглэгч нэвтрээгүй байна. Давтан нэвтэрнэ үү.");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => RegisterScreen()));
       return;
     }
@@ -72,13 +49,13 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
       "car_model": carModelTextEditingController.text.trim(),
       "car_number": carNumberTextEditingController.text.trim(),
       "car_color": carColorTextEditingController.text.trim(),
-      "type": selectedCarType, // Добавляем тип автомобиля
+      "type": selectedCarType, 
     };
 
     DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers");
     userRef.child(currentUser!.uid).child("car_details").set(driverCarInfoMap);
 
-    Fluttertoast.showToast(msg: "Car details have been saved. Congratulations");
+    Fluttertoast.showToast(msg: "Машины мэдээлэл хадгалагдлаа.");
     Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
   }
 }
@@ -103,7 +80,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                 SizedBox(height: 20,),
 
                 Text(
-                  "Add Car Details",
+                  "Машины мэдээлэл",
                   style: TextStyle(
                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                     fontSize: 25,
@@ -128,7 +105,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                 LengthLimitingTextInputFormatter(50),
                               ],
                               decoration: InputDecoration(
-                                hintText: "Car Model",
+                                hintText: "Машины загвар",
                                 hintStyle: TextStyle(color: Colors.grey),
                                 filled: true,
                                 fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
@@ -144,13 +121,13 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if (text == null || text.isEmpty) {
-                                  return "Car model can't be empty";
+                                  return "Машины загвар хоосон байж болохгүй";
                                 }
                                 if (text.length < 2) {
-                                  return "Please enter a valid car model";
+                                  return "Зөв машины загвар оруулна уу";
                                 }
                                 if (text.length > 49) {
-                                  return "Car model can't be more than 50 characters";
+                                  return "Машины загвар 50 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                                 return null;
                               },
@@ -166,7 +143,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Car Number",
+                                hintText: "Машины дугаар",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -184,13 +161,10 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Name can\'t be empty";
+                                  return "Машины дугаар хоосон байж болохгүй";
                                 }
-                                if(text.length < 2){
-                                  return "Please enter a valid name";
-                                }
-                                if(text.length > 49){
-                                  return "Name can\'t be more than 50";
+                                if(text.length != 7){
+                                  return "Зөв машины дугаар оруулна уу";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -205,7 +179,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Car Color",
+                                hintText: "Машины өнгө",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -223,13 +197,13 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Name can\'t be empty";
+                                  return "Машины өнгө хоосон байж болохгүй";
                                 }
                                 if(text.length < 2){
-                                  return "Please enter a valid name";
+                                  return "Зөв машины өнгө оруулна уу";
                                 }
                                 if(text.length > 49){
-                                  return "Name can\'t be more than 50";
+                                  return "Машины өнгө 50 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -241,7 +215,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
 
                             DropdownButtonFormField(
                               decoration: InputDecoration(
-                                hintText: "Please Choose Car Type",
+                                hintText: "Машины төрлийг сонгоно уу",
                                 prefixIcon: Icon(Icons.car_crash, color: darkTheme? Colors.amber.shade400 : Colors.grey,),
                                 filled: true,
                                 fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
@@ -289,7 +263,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                            _submit(); 
                         },
                          child: Text(
-                          "Confirm",
+                          "Баталгаажуулах",
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -297,45 +271,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                          ),
 
                          SizedBox(height: 20,),
-
-                         GestureDetector(
-                          onTap: (){},
-                          child: Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
-                            ),
-                          )
-                         ),
-
-                          SizedBox(height: 20,),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Have an account?",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                ),
-                              ),
-
-                              SizedBox(width: 5,),
-
-                              GestureDetector(
-                                onTap: (){
-                                },
-                                child: Text(
-                                  "Sign In",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
                     ],
                   ),
                 ),

@@ -30,7 +30,7 @@ class _EarningsTabPageState extends State<EarningsTabPage> {
               child: Column(
                 children: [
                   Text(
-                    "your Earnings",
+                    "Таны орлого",
                     style: TextStyle(
                       color: darkTheme ? Colors.amber.shade400 : Colors.white,
                       fontSize: 16,
@@ -74,7 +74,7 @@ class _EarningsTabPageState extends State<EarningsTabPage> {
                   SizedBox(width: 10,),
 
                   Text(
-                    "Trips Completed",
+                    "Дууссан аяллууд",
                     style: TextStyle(
                       color: Colors.black54,
                     ),

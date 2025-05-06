@@ -32,7 +32,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
   LocationPermission? _locationPermission;
 
-  String statusText = "Now Offline";
+  String statusText = "Одоо оффлайн байна";
   Color buttonColor = Colors.grey;
   bool isDriverActive = false; 
 
@@ -53,7 +53,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
     newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     String humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(driverCurrentPosition!, context);
-    print("This is our address = " + humanReadableAddress);
+    print("Энэ бол манай хаяг = " + humanReadableAddress);
 
     AssistantMethods.readDriverRatings(context);
   }
@@ -120,7 +120,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
         ),
 
         // ui for online/offline driver
-        statusText != "Now online" 
+        statusText != "Одоо онлайн байна" 
         ? Container(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
@@ -129,7 +129,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
         // button for online/offline driver
         Positioned(
-          top: statusText != "Now Online" ? MediaQuery.of(context).size.height * 0.45 : 40,
+          top: statusText != "Одоо онлайн байна" ? MediaQuery.of(context).size.height * 0.45 : 40,
           left: 0,
           right: 0,
           child: Row(
@@ -142,19 +142,20 @@ class _HomeTabPageState extends State<HomeTabPage> {
                     updateDriversLocationAtRealTime();
 
                     setState(() {
-                      statusText = "Now Online";
+                      statusText = "Одоо онлайн байна";
                       isDriverActive = true;
                       buttonColor = Colors.transparent;
                     });
+                    Fluttertoast.showToast(msg: "Та одоо онлайн байна");
                   }
                   else{
                     driverIsOfflineNow();
                     setState(() {
-                      statusText = "Now Offline";
+                      statusText = "Одоо оффлайн байна";
                       isDriverActive = false;
                       buttonColor = Colors.grey;
                     });
-                    Fluttertoast.showToast(msg: "You are offline now");
+                    Fluttertoast.showToast(msg: "Та одоо оффлайн байна");
                   }
                 }, 
                 style: ElevatedButton.styleFrom(
@@ -164,7 +165,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                     borderRadius: BorderRadius.circular(26),
                   ) 
                 ),
-                child: statusText != "Now Online" ? 
+                child: statusText != "Одоо онлайн байна" ? 
                 Text(statusText,
                   style: TextStyle(
                     fontSize: 16,
@@ -182,22 +183,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
       ],
     );
   }
-
-  // driverIsOnlineNow() async {
-  //   Position pos = await Geolocator.getCurrentPosition(
-  //     desiredAccuracy: LocationAccuracy.high,
-  //   );
-
-  //   driverCurrentPosition = pos;
-
-  //   Geofire.initialize("activeDrivers");
-  //   Geofire.setLocation(currentUser!.uid, driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
-
-  //   DatabaseReference ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
-
-  //   ref.set("idle");
-  //   ref.onValue.listen((event){ });
-  // }
 
   driverIsOnlineNow() async {
   Position pos = await Geolocator.getCurrentPosition(
@@ -233,19 +218,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
     });
   }
 
-  // driverIsOfflineNow() {
-  //   Geofire.removeLocation(currentUser!.uid);
-
-  //   DatabaseReference? ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
-
-  //   ref.onDisconnect();
-  //   ref.remove();
-  //   ref = null;
-
-  //   // Future.delayed(Duration(milliseconds: 2000), (){
-  //   //   SystemChannels.platform.invokeMethod("SystemNavigator.pop");
-  //   // });
-  // }
 
   driverIsOfflineNow() async {
   // Remove driver's location from Geofire (making them inactive)
@@ -257,9 +229,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
   // Optionally remove any other data related to the driver's active status.
   FirebaseDatabase.instance.ref().child("activeDrivers").child(currentUser!.uid).remove(); // To delete active driver entry
-
-  // You can call Fluttertoast to notify the user that they are now offline
-  Fluttertoast.showToast(msg: "You are offline now");
 }
 }
 

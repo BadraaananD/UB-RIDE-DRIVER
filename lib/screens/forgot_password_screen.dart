@@ -18,23 +18,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>{
 
   final _formKey = GlobalKey<FormState>();
 
-//   void _submit() {
-//   firebaseAuth.sendPasswordResetEmail(email: emailTextEditingController.text.trim()).then((value) {
-//     // Show success message, assuming the email is valid
-//     Fluttertoast.showToast(msg: "We have sent you an email to recover your password, please check your inbox.");
-//   }).catchError((error) {
-//     // Handle error (e.g., show a more specific error message)
-//     Fluttertoast.showToast(msg: "Error Occurred: ${error.message ?? error.toString()}");
-//   });
-// }
-
 void _submit() {
   firebaseAuth.sendPasswordResetEmail(
     email: emailTextEditingController.text.trim()
   ).then((value){
-    Fluttertoast.showToast(msg: "We have sent you an email to recover password, please check email");
+    Fluttertoast.showToast(msg: "Бид танд нууц үгээ сэргээх имэйл илгээсэн тул имэйлээ шалгана уу");
   }).onError((error, StackTrace){
-    Fluttertoast.showToast(msg: "Error Occured: \n ${error.toString()}");
+    Fluttertoast.showToast(msg: "Алдаа гарлаа: \n ${error.toString()}");
   });
 }
 
@@ -60,7 +50,7 @@ void _submit() {
                 SizedBox(height: 20),
 
                 Text(
-                  'Forgot Password Screen',
+                  'Нууц үг сэргээх',
                   style: TextStyle(
                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                     fontSize: 25,
@@ -84,7 +74,7 @@ void _submit() {
                                 LengthLimitingTextInputFormatter(100)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Email",
+                                hintText: "Имэйл",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -102,16 +92,16 @@ void _submit() {
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
-                                  return "Email can\'t be empty";
+                                  return "Имэйл хоосон байж болохгүй";
                                 }
                                 if(EmailValidator.validate(text) == true){
                                   return null;
                                 }
                                 if(text.length < 2){
-                                  return "Please enter a valid email";
+                                  return "Хүчинтэй имэйл оруулна уу";
                                 }
-                                if(text.length > 49){
-                                  return "Email can\'t be more than 100";
+                                if(text.length > 100){
+                                  return "Имэйл 100 тэмдэгтээс хэтрэх ёсгүй";
                                 }
                               },
                               onChanged: (text) => setState(() {
@@ -134,7 +124,7 @@ void _submit() {
                            _submit(); 
                         },
                          child: Text(
-                          "Send Reset Password link",
+                          "Нууц үг сэргээх холбоос илгээх",
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -143,23 +133,11 @@ void _submit() {
 
                          SizedBox(height: 20,),
 
-                         GestureDetector(
-                          onTap: (){},
-                          child: Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
-                            ),
-                          )
-                         ),
-
-                          SizedBox(height: 20,),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Already have an account?",
+                                "Та бүртгэлтэй юу?",
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15,
@@ -173,7 +151,7 @@ void _submit() {
                                   Navigator.push(context, MaterialPageRoute(builder: (c) => LoginScreen()));
                                 },
                                 child: Text(
-                                  "Login",
+                                  "Нэвтрэх",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: darkTheme ? Colors.amber.shade400 : Colors.blue,

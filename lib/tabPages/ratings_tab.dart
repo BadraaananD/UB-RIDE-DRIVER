@@ -79,7 +79,7 @@ class _RatingsTabPageState extends State<RatingsTabPage> {
               const SizedBox(height: 22.0),
 
               Text(
-                "Your Ratings",
+                "Таны үнэлгээ",
                 style: TextStyle(
                   fontSize: 22,
                   letterSpacing: 2,

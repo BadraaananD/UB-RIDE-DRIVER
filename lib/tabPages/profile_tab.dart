@@ -26,7 +26,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
       context: context, 
       builder: (context) {
         return AlertDialog(
-          title: Text("Update"),
+          title: Text("Шинэчлэх"),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -41,7 +41,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               onPressed: (){
                 Navigator.pop(context);
               }, 
-              child: Text("Cancel", style: TextStyle(color: Colors.red),),
+              child: Text("Цуцлах", style: TextStyle(color: Colors.red),),
             ),
 
             TextButton(
@@ -50,13 +50,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   "name": nameTextEditingController.text.trim(),
                 }).then((value){
                   nameTextEditingController.clear();
-                  Fluttertoast.showToast(msg: "Updated Succesfully. \n Reload the app to see the changes");
+                  Fluttertoast.showToast(msg: "Амжилттай шинэчлэгдлээ. \n Өөрчлөлтийг харахын тулд аппыг дахин ачаалаарай.");
                 }).catchError((errorMessage){
-                  Fluttertoast.showToast(msg: "Error Occurred. \n $errorMessage");
+                  Fluttertoast.showToast(msg: "Алдаа гарлаа: \n $errorMessage");
                 });
                 Navigator.pop(context);
               }, 
-              child: Text("Ok", style: TextStyle(color: Colors.black),),
+              child: Text("Шинэчлэх", style: TextStyle(color: Colors.black),),
             )
           ],
         );
@@ -72,7 +72,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
       context: context,
        builder: (context){
         return AlertDialog(
-          title: Text("Update"),
+          title: Text("Шинэчлэх"),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -88,7 +88,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               onPressed: (){
                 Navigator.pop(context);
               },
-              child: Text("Cancel", style: TextStyle(color: Colors.red),),),
+              child: Text("Цуцлах", style: TextStyle(color: Colors.red),),),
             
             TextButton(
               onPressed: (){
@@ -96,13 +96,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   "phone": phoneTextEditingController.text.trim(),
                 }).then((value){
                   phoneTextEditingController.clear();
-                  Fluttertoast.showToast(msg: "Updated Successfully. \n Reload the app to see the changes");
+                  Fluttertoast.showToast(msg: "Амжилттай шинэчлэгдлээ. \n Өөрчлөлтийг харахын тулд аппыг дахин ачаалаарай.");
                 }).catchError((errorMessage) {
-                  Fluttertoast.showToast(msg: "Error Occurred. \n $errorMessage");
+                  Fluttertoast.showToast(msg: "Алдаа гарлаа: \n $errorMessage");
                 });
                 Navigator.pop(context);
               },
-              child: Text("Ok", style: TextStyle(color: Colors.black))),
+              child: Text("Шинэчлэх", style: TextStyle(color: Colors.black))),
 
                 ],
               
@@ -118,7 +118,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
       context: context,
        builder: (context){
         return AlertDialog(
-          title: Text("Update"),
+          title: Text("Шинэчлэх"),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -134,7 +134,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               onPressed: (){
                 Navigator.pop(context);
               },
-              child: Text("Cancel", style: TextStyle(color: Colors.red),),),
+              child: Text("Цуцлах", style: TextStyle(color: Colors.red),),),
             
             TextButton(
               onPressed: (){
@@ -142,13 +142,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   "address": addressTextEditingController.text.trim(),
                 }).then((value){
                   addressTextEditingController.clear();
-                  Fluttertoast.showToast(msg: "Updated Successfully. \n Reload the app to see the changes");
+                  Fluttertoast.showToast(msg: "Амжилттай шинэчлэгдлээ. \n Өөрчлөлтийг харахын тулд аппыг дахин ачаалаарай.");
                 }).catchError((errorMessage) {
-                  Fluttertoast.showToast(msg: "Error Occurred. \n $errorMessage");
+                  Fluttertoast.showToast(msg: "Алдаа гарлаа: \n $errorMessage");
                 });
                 Navigator.pop(context);
               },
-              child: Text("Ok", style: TextStyle(color: Colors.black))),
+              child: Text("Шинэчлэх", style: TextStyle(color: Colors.black))),
 
                 ],
               
@@ -178,7 +178,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               color: Colors.black,
              )
              ),
-             title: Text("Profile Screen", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+             title: Text("Миний мэдээлэл", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
              centerTitle: true,
              elevation: 0.0,
         ),
@@ -320,7 +320,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
                       ),
-                      child: Text("Log Out"),
+                      child: Text("Гарах"),
                     ),
                   ],
                 ),

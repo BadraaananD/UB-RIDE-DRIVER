@@ -17,8 +17,8 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
   String formatDateAndTime(String dateTimeFromDB){
     DateTime dateTime = DateTime.parse(dateTimeFromDB);
 
-    //
-    String formattedDateTime = "${DateFormat.MMMd().format(dateTime)}, ${DateFormat.y().format(dateTime)} - ${DateFormat.jm().format(dateTime)}";
+    
+    String formattedDateTime = "${DateFormat.y().format(dateTime)} оны ${DateFormat.M().format(dateTime)} сарын ${DateFormat.d().format(dateTime)}  - ${DateFormat.Hm().format(dateTime)}";
 
     return formattedDateTime;
   }
@@ -96,7 +96,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Final Cost",
+                      Text("Нийт",
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -104,7 +104,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
 
                       SizedBox(height: 8,),
 
-                      Text(" ${widget.tripsHistoryModel!.fareAmount!}",
+                      Text(" ${widget.tripsHistoryModel!.fareAmount!} ₮",
                         style:TextStyle(
                           fontWeight: FontWeight.bold,
                         )
@@ -115,7 +115,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("status",
+                      Text("Төлөв",
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -141,7 +141,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
 
               Row(
                 children: [
-                  Text("TRIP",
+                  Text("Аялал",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

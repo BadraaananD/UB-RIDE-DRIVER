@@ -22,7 +22,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
       appBar: AppBar(
         backgroundColor: darkTheme ? Colors.black : Colors.white,
         title: Text(
-          "Trips History",
+          "Аяллын түүх",
           style: TextStyle(
             color: darkTheme ? Colors.amber.shade400 : Colors.black,
           ),
