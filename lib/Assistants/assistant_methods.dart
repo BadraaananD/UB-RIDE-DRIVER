@@ -158,4 +158,38 @@ class AssistantMethods {
       }
     });
   }
+
+  static Future<void> driverIsOfflineNow() async {
+    try {
+      String driverId = firebaseAuth.currentUser!.uid;
+
+      // Remove driver's location from GeoFire
+      Geofire.removeLocation(driverId);
+
+      // Remove the driver's status from Firebase
+      DatabaseReference ref = FirebaseDatabase.instance
+          .ref()
+          .child("drivers")
+          .child(driverId)
+          .child("newRideStatus");
+      await ref.remove();
+
+      // Remove active driver entry
+      await FirebaseDatabase.instance
+          .ref()
+          .child("activeDrivers")
+          .child(driverId)
+          .remove();
+
+      // Cancel live location updates
+      if (streamSubscriptionPosition != null) {
+        streamSubscriptionPosition!.cancel();
+        streamSubscriptionPosition = null;
+      }
+
+      print("Driver is now offline and removed from activeDrivers");
+    } catch (e) {
+      print("Error while setting driver offline: $e");
+    }
+  }
 }

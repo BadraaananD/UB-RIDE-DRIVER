@@ -216,15 +216,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
 
   driverIsOfflineNow() async {
-  // Remove driver's location from Geofire (making them inactive)
-  Geofire.removeLocation(currentUser!.uid);
-
-  // Remove the driver's status from Firebase indicating they are offline
-  DatabaseReference ref = FirebaseDatabase.instance.ref().child("drivers").child(currentUser!.uid).child("newRideStatus");
-  ref.remove(); // Remove the ride status entry to mark them offline
-
-  // Optionally remove any other data related to the driver's active status.
-  FirebaseDatabase.instance.ref().child("activeDrivers").child(currentUser!.uid).remove(); // To delete active driver entry
-}
+    await AssistantMethods.driverIsOfflineNow();
+  }
 }
 

@@ -1,3 +1,4 @@
+import 'package:drivers/Assistants/assistant_methods.dart';
 import 'package:drivers/global/global.dart';
 import 'package:drivers/splashScreen/splash_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -307,9 +308,12 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     SizedBox(height: 20,),
 
                     ElevatedButton(
-                      onPressed: (){
-                        firebaseAuth.signOut();
-                        Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
+                      onPressed: () async {
+                        await AssistantMethods.driverIsOfflineNow();
+                        await firebaseAuth.signOut();
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (c) => SplashScreen()));
                       }, 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
