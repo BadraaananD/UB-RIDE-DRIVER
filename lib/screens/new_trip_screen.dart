@@ -30,7 +30,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(47.9206, 106.9176),
     zoom: 14.4746,
   );
 
@@ -491,6 +491,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
                       onPressed: () async {
                         // Ваш существующий код для обработки нажатий
                         if (rideRequestStatus == "accepted") {
+                          FirebaseDatabase.instance.ref().child("drivers").child(firebaseAuth.currentUser!.uid).child("newRideStatus").set("arrived");
                           rideRequestStatus = "arrived";
                           FirebaseDatabase.instance
                               .ref()
@@ -517,6 +518,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
                           Navigator.pop(context);
                         } else if (rideRequestStatus == "arrived") {
+                          FirebaseDatabase.instance.ref().child("drivers").child(firebaseAuth.currentUser!.uid).child("newRideStatus").set("ontrip");
                           rideRequestStatus = "ontrip";
                           FirebaseDatabase.instance
                               .ref()
@@ -530,6 +532,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
                             buttonColor = Colors.red;
                           });
                         } else if (rideRequestStatus == "ontrip") {
+                          FirebaseDatabase.instance.ref().child("drivers").child(firebaseAuth.currentUser!.uid).child("newRideStatus").set("idle");
                           endTripNow();
                         }
                       },

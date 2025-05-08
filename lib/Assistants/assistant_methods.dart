@@ -187,9 +187,48 @@ class AssistantMethods {
         streamSubscriptionPosition = null;
       }
 
+      if (streamSubscriptionDriverLivePosition != null) {
+      streamSubscriptionDriverLivePosition!.cancel();
+      streamSubscriptionDriverLivePosition = null;
+    }
+
       print("Driver is now offline and removed from activeDrivers");
     } catch (e) {
       print("Error while setting driver offline: $e");
     }
   }
+
+  static void setupPresenceSystem() async {
+  String driverId = firebaseAuth.currentUser!.uid;
+
+  // Reference to driver's presence status
+  DatabaseReference presenceRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(driverId)
+      .child("presence");
+
+  // Reference to activeDrivers
+  DatabaseReference activeDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("activeDrivers")
+      .child(driverId);
+
+  // Monitor connection status
+  DatabaseReference connectedRef = FirebaseDatabase.instance.ref(".info/connected");
+  connectedRef.onValue.listen((event) async {
+    if (event.snapshot.value == false) {
+      // Device is disconnected
+      await presenceRef.set("disconnected");
+      return;
+    }
+
+    // Device is connected
+    await presenceRef.set("connected");
+
+    // Set up onDisconnect to remove driver from activeDrivers
+    presenceRef.onDisconnect().set("disconnected");
+    activeDriverRef.onDisconnect().remove();
+  });
+}
 }

@@ -17,13 +17,13 @@ class HomeTabPage extends StatefulWidget {
   State<HomeTabPage> createState() => _HomeTabPageState();
 }
 
-class _HomeTabPageState extends State<HomeTabPage> {
+class _HomeTabPageState extends State<HomeTabPage> with WidgetsBindingObserver{
 
   GoogleMapController? newGoogleMapController;
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(47.9206, 106.9176),
     zoom: 14.4746,
   );
 
@@ -83,6 +83,18 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    if (streamSubscriptionPosition != null) {
+      streamSubscriptionPosition!.cancel();
+      streamSubscriptionPosition = null;
+    }
+    newGoogleMapController?.dispose();
+    // Remove lifecycle observer
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -93,6 +105,9 @@ class _HomeTabPageState extends State<HomeTabPage> {
     PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
     pushNotificationSystem.initializeCloudMessaging(context);
     pushNotificationSystem.generateAndGetToken();
+
+    AssistantMethods.setupPresenceSystem();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
