@@ -1,5 +1,4 @@
 import 'package:drivers/infoHandler/app_info.dart';
-import 'package:drivers/models/trips_history_model.dart';
 import 'package:drivers/widgets/history_design_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,24 +13,20 @@ class TripsHistoryScreen extends StatefulWidget {
 class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
   @override
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: darkTheme ? Colors.black : Colors.grey[100],
+      backgroundColor:Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: darkTheme ? Colors.black : Colors.white,
+        backgroundColor:Colors.white,
         title: Text(
           "Аяллын түүх",
           style: TextStyle(
-            color: darkTheme ? Colors.amber.shade400 : Colors.black,
+            color: Colors.black,
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.close, color: darkTheme ? Colors.amber.shade400 : Colors.black,),
+          icon: Icon(Icons.close, color:Colors.black,),
           onPressed: ()
           {
-            //SystemNavigator.pop();
             Navigator.pop(context);
           }, 
         ),
@@ -44,7 +39,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
           itemBuilder: (context, i)
           {
             return Card(
-              color: darkTheme? Colors.black : Colors.grey[100],
+              color:Colors.grey[100],
               shadowColor: Colors.transparent,
               child: HistoryDesignUIWidget(
                 tripsHistoryModel: Provider.of<AppInfo>(context, listen: false).allTripsHistoryInformationList[i],

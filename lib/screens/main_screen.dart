@@ -1,5 +1,3 @@
-import 'package:drivers/global/global.dart';
-import 'package:drivers/splashScreen/splash_screen.dart';
 import 'package:drivers/tabPages/earning_tab.dart';
 import 'package:drivers/tabPages/home_tab.dart';
 import 'package:drivers/tabPages/profile_tab.dart';
@@ -34,9 +32,6 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
   @override 
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
@@ -57,9 +52,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Бүртгэл "),
         ],
         
-        unselectedItemColor: darkTheme ?  Colors.black54 : Colors.white54,
-        selectedItemColor: darkTheme ? Colors.black : Colors.white,
-        backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+        unselectedItemColor:Colors.white54,
+        selectedItemColor:Colors.white,
+        backgroundColor:Colors.blue,
         type: BottomNavigationBarType.fixed,
         selectedLabelStyle: TextStyle(fontSize: 14),
         showUnselectedLabels: true,

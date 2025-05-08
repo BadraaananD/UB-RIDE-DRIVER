@@ -57,20 +57,18 @@ class _RatingsTabPageState extends State<RatingsTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: darkTheme ? Colors.black : Colors.white,
+      backgroundColor:Colors.white,
       body: Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        backgroundColor: darkTheme ? Colors.grey : Colors.white60,
+        backgroundColor:Colors.white60,
         child: Container(
           margin: const EdgeInsets.all(4),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: darkTheme ? Colors.black : Colors.white54,
+            color:Colors.white54,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -84,7 +82,7 @@ class _RatingsTabPageState extends State<RatingsTabPage> {
                   fontSize: 22,
                   letterSpacing: 2,
                   fontWeight: FontWeight.bold,
-                  color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                  color:Colors.blue,
                 ),
               ),
 
@@ -100,7 +98,7 @@ class _RatingsTabPageState extends State<RatingsTabPage> {
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                  color:Colors.blue,
                 ),
                 onRatingUpdate: (rating) {
                   // Read-only, no update needed
@@ -115,7 +113,7 @@ class _RatingsTabPageState extends State<RatingsTabPage> {
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                  color:Colors.blue,
                 ),
               ),
 

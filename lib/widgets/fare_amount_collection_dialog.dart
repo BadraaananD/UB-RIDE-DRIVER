@@ -13,9 +13,6 @@ class FareAmountCollectionDialog extends StatefulWidget {
 class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog> {
   @override
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -26,7 +23,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
         margin: EdgeInsets.all(6),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: darkTheme ? Colors.black : Colors.blue,
+          color: Colors.blue,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -38,7 +35,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
               //"Trip Fare Amount
               "Trip Fare Amount",
               style: TextStyle(fontWeight: FontWeight.bold,
-               color: darkTheme ? Colors.amber.shade400 : Colors.white,
+               color: Colors.white,
                fontSize: 20,
                ),
             ),
@@ -46,7 +43,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
             Text(
               "₮ " + widget.totalFareAmount.toString(),
               style: TextStyle(fontWeight: FontWeight.bold,
-               color: darkTheme ? Colors.amber.shade400 : Colors.white,
+               color: Colors.white,
                fontSize: 50,
                ),
             ),
@@ -58,7 +55,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
                 "This is the total trip amount. Please collect it from the user",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: darkTheme ? Colors.amber.shade400 : Colors.white,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -69,7 +66,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
               padding: EdgeInsets.all(8),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.white,
+                  backgroundColor: Colors.white,
                 ),
                 onPressed: (){
                   Future.delayed(Duration(milliseconds: 2000), () {
@@ -82,7 +79,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
                     Text("Collect Cash",
                       style: TextStyle(
                         fontSize: 20,
-                        color: darkTheme ? Colors.black : Colors.blue,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold, 
                       ),
                     ),
@@ -91,7 +88,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
                       "₮ " + widget.totalFareAmount.toString(),
                       style: TextStyle(
                         fontSize: 20,
-                        color: darkTheme ? Colors.black : Colors.blue,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

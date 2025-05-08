@@ -20,8 +20,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
   final carNumberTextEditingController = TextEditingController();
   final carColorTextEditingController = TextEditingController();
 
-  List<String> carTypes = ["Car", "CNG", "Bike"];
-  String? selectedCarType;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,11 +32,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
 
   _submit() {
   if (_formKey.currentState!.validate()) {
-    if (selectedCarType == null) {
-      Fluttertoast.showToast(msg: "Машины төрөл сонгоно уу");
-      return;
-    }
-
     if (currentUser == null) {
       Fluttertoast.showToast(msg: "Хэрэглэгч нэвтрээгүй байна. Давтан нэвтэрнэ үү.");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => RegisterScreen()));
@@ -49,7 +42,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
       "car_model": carModelTextEditingController.text.trim(),
       "car_number": carNumberTextEditingController.text.trim(),
       "car_color": carColorTextEditingController.text.trim(),
-      "type": selectedCarType, 
     };
 
     DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers");
@@ -62,9 +54,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -75,14 +64,14 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
           children: [
             Column(
               children: [
-                Image.asset(darkTheme ? 'images/2.jpg' : 'images/1.jpg'),
+                Image.asset('images/1.jpg'),
 
                 SizedBox(height: 20,),
 
                 Text(
                   "Машины мэдээлэл",
                   style: TextStyle(
-                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                    color:Colors.blue,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -108,7 +97,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                 hintText: "Машины загвар",
                                 hintStyle: TextStyle(color: Colors.grey),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor: Colors.grey.shade200,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(40),
                                   borderSide: BorderSide(
@@ -116,7 +105,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.directions_car, color: darkTheme ? Colors.amber.shade400 : Colors.grey),
+                                prefixIcon: Icon(Icons.directions_car, color:Colors.grey),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -148,7 +137,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -156,7 +145,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -184,7 +173,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -192,7 +181,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -210,40 +199,6 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                 carColorTextEditingController.text = text;
                               }),
                             ),
-
-                            SizedBox(height: 20,),
-
-                            DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                hintText: "Машины төрлийг сонгоно уу",
-                                prefixIcon: Icon(Icons.car_crash, color: darkTheme? Colors.amber.shade400 : Colors.grey,),
-                                filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                  borderSide: BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  )
-                                )
-                              ),
-                              items: carTypes.map((car){
-                                return DropdownMenuItem(
-                                  child: Text(
-                                    car,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  value: car,
-                                 );
-                              }).toList(),
-                              onChanged: (newValue){
-                                setState(() {
-                                  selectedCarType = newValue.toString();
-                                });
-                              }
-                            ),
-
-                            SizedBox(height: 20,),
                           ],
                         ),
                       ),
@@ -252,7 +207,8 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: darkTheme ? Colors.black : Colors.white, backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                          foregroundColor:Colors.white, 
+                          backgroundColor:Colors.blue,
                           elevation: 0,
                           shape:  RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32),

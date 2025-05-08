@@ -69,8 +69,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -81,14 +79,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             Column(
               children: [
-                Image.asset(darkTheme ? 'images/2.jpg' : 'images/1.jpg'),
+                Image.asset('images/1.jpg'),
 
                 SizedBox(height: 20),
 
                 Text(
                   'Бүртгүүлэх',
                   style: TextStyle(
-                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                    color: Colors.blue,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -115,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -123,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -154,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -162,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -190,7 +188,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               showCountryFlag: false,
                               dropdownIcon: Icon(
                                 Icons.arrow_drop_down,
-                                color: darkTheme ? Colors.amber.shade400 : Colors.grey,
+                                color:Colors.grey,
                               ),
                               decoration: InputDecoration(
                                 hintText: "Утасны дугаар",
@@ -198,7 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -224,7 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -232,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -264,7 +262,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -272,11 +270,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.grey,
+                                    color:Colors.grey,
                                   ),
                                   onPressed: (){
                                     //update the state i.e toggle the state of passwordVisible variable
@@ -317,7 +315,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -325,11 +323,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.grey,
+                                    color:Colors.grey,
                                   ),
                                   onPressed: (){
                                     //update the state i.e toggle the state of passwordVisible variable
@@ -367,7 +365,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: darkTheme ? Colors.black : Colors.white, backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                          foregroundColor:Colors.white, backgroundColor:Colors.blue,
                           elevation: 0,
                           shape:  RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32),
@@ -394,7 +392,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Text(
                             "Нууц үгээ мартсан уу?",
                             style: TextStyle(
-                              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                              color:Colors.blue,
                             ),
                           )
                          ),
@@ -422,7 +420,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   "Нэвтрэх",
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                                    color:Colors.blue,
                                   ),
                                 ),
                               )

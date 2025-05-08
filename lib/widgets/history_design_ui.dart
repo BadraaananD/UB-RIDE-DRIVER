@@ -25,9 +25,6 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -42,7 +39,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
 
         Container(
           decoration: BoxDecoration(
-            color: darkTheme? Colors.black : Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
           padding: EdgeInsets.all(15),

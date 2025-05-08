@@ -158,9 +158,6 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -193,10 +190,10 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     Container(
                       padding: EdgeInsets.all(50),
                       decoration: BoxDecoration(
-                        color: darkTheme ? Colors.amber.shade400 : Colors.lightBlue,
+                        color:Colors.lightBlue,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.person, color: darkTheme ? Colors.black : Colors.white,),
+                      child: Icon(Icons.person, color:Colors.white,),
                     ),
 
                     SizedBox(height: 30,),
@@ -206,7 +203,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       children: [
                         Text("${onlineDriverData.name}",
                           style: TextStyle(
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color: Colors.blue,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -218,7 +215,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                           }, 
                           icon: Icon(
                             Icons.edit,
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color:Colors.blue,
                           )
                         ),
                       ],
@@ -233,7 +230,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       children: [
                         Text("${onlineDriverData.phone}",
                           style: TextStyle(
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color:Colors.blue,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                         ),
@@ -244,7 +241,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                           }, 
                           icon: Icon(
                             Icons.edit,
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color: Colors.blue,
                           )
                         )
                       ],
@@ -259,7 +256,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       children: [
                         Text("${onlineDriverData.address}",
                           style: TextStyle(
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color:Colors.blue,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                         ),
@@ -270,7 +267,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                           }, 
                           icon: Icon(
                             Icons.edit,
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color: Colors.blue,
                           )
                         )
                       ],
@@ -282,7 +279,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
 
                     Text("${onlineDriverData.email}",
                       style: TextStyle(
-                        color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                        color:Colors.blue,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -295,16 +292,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       children: [
                         Text("${onlineDriverData.car_model} \n ${onlineDriverData.car_color} (${onlineDriverData.car_number})",
                           style: TextStyle(
-                            color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                            color: Colors.blue,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
 
-                        Image.asset(
-                          onlineDriverData.car_type == "Car" ? "images/car.png"
-                            :onlineDriverData.car_type == "CNG" ? "images/cng.png"
-                            :"images/Bike.png",
+                        Image.asset("images/car.png",
                           scale: 2,
                         ),
                       ],

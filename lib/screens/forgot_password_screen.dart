@@ -32,9 +32,6 @@ void _submit() {
 
   @override
   Widget build(BuildContext context){
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -45,14 +42,14 @@ void _submit() {
           children: [
             Column(
               children: [
-                Image.asset(darkTheme ? 'images/2.jpg' : 'images/1.jpg'),
+                Image.asset('images/1.jpg'),
 
                 SizedBox(height: 20),
 
                 Text(
                   'Нууц үг сэргээх',
                   style: TextStyle(
-                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                    color:Colors.blue,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -79,7 +76,7 @@ void _submit() {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -87,7 +84,7 @@ void _submit() {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -113,7 +110,8 @@ void _submit() {
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: darkTheme ? Colors.black : Colors.white, backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                          foregroundColor:Colors.white, 
+                          backgroundColor:Colors.blue,
                           elevation: 0,
                           shape:  RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32),
@@ -154,7 +152,7 @@ void _submit() {
                                   "Нэвтрэх",
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                                    color:Colors.blue,
                                    ),
                                   ),
                                 ),

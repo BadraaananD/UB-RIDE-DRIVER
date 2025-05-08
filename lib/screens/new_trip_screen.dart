@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:drivers/Assistants/assistant_methods.dart';
 import 'package:drivers/global/global.dart';
 import 'package:drivers/models/user_ride_request_information.dart';
@@ -62,7 +61,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
   //Step 2: When driver picks up the user in his car
   // originLatLng = user current location which will be also the current location of the driver at that time
   // destinationLatLng = user's dropOff location
-  Future<void> drawPolyLineFromOriginToDestination(LatLng originLatLng, LatLng destinationLatLng, bool darkTheme) async {
+  Future<void> drawPolyLineFromOriginToDestination(LatLng originLatLng, LatLng destinationLatLng) async {
     showDialog(
       context: context,
       builder: (BuildContext context) => ProgressDialog(message: "Please wait....",),
@@ -87,7 +86,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
     setState(() {
       Polyline polyline = Polyline(
-        color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+        color:Colors.blue,
         polylineId: PolylineId("PolylineID"),
         jointType: JointType.round,
         points: polyLinePositionCoordinates,
@@ -335,8 +334,6 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
     createDriverIconMarker();
 
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Scaffold(
       body: Stack(
         children: [
@@ -363,7 +360,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
               var userPickUpLatLng = widget.userRideRequestDetails!.originLatLng;
 
-              drawPolyLineFromOriginToDestination(driverCurrentLatLng, userPickUpLatLng!, darkTheme);
+              drawPolyLineFromOriginToDestination(driverCurrentLatLng, userPickUpLatLng!);
 
               getDriverLocationUpdatesAtRealTime();
             },
@@ -378,7 +375,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
               padding: EdgeInsets.all(10),
               child: Container(
                 decoration: BoxDecoration(
-                  color: darkTheme ? Colors.black : Colors.white,
+                  color:Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -398,13 +395,13 @@ class _NewTripScreenState extends State<NewTripScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: darkTheme ? Colors.amber.shade400 : Colors.black,
+                          color:Colors.black,
                         ),
                       ),
 
                       SizedBox(height: 10,),
 
-                      Divider(thickness: 1, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                      Divider(thickness: 1, color:Colors.grey,),
                       
                       SizedBox(height: 10,),
 
@@ -415,14 +412,14 @@ class _NewTripScreenState extends State<NewTripScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                            color: darkTheme ? Colors.amber.shade400 : Colors.black,
+                            color:Colors.black,
                           ),
                           ),
 
                           IconButton(
                             onPressed: (){},
                             icon: Icon(Icons.phone,
-                            color: darkTheme ? Colors.amber.shade400 : Colors.black,
+                            color:Colors.black,
                             ),
                           )
                         ],
@@ -445,7 +442,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
                                 widget.userRideRequestDetails!.originAddress!,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: darkTheme ? Colors.amberAccent : Colors.black,
+                                  color:Colors.black,
                                 ),
                               ),
                             ))
@@ -469,7 +466,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
                                 widget.userRideRequestDetails!.destinationAddress!,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: darkTheme ? Colors.amberAccent : Colors.black,
+                                  color:Colors.black,
                                 ),
                               ),
                             ))
@@ -480,7 +477,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
                       Divider(
                         thickness: 1,
-                        color: darkTheme? Colors.amber.shade400 : Colors.grey,
+                        color: Colors.grey,
                       ),
 
                       SizedBox(height: 10,),
@@ -510,8 +507,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
                           await drawPolyLineFromOriginToDestination(
                             widget.userRideRequestDetails!.originLatLng!,
-                            widget.userRideRequestDetails!.destinationLatLng!,
-                            darkTheme,
+                            widget.userRideRequestDetails!.destinationLatLng!
                           );
 
                           Navigator.pop(context);
@@ -534,20 +530,20 @@ class _NewTripScreenState extends State<NewTripScreen> {
                       },
                       icon: Icon(
                         Icons.directions_car,
-                        color: darkTheme ? Colors.black : Colors.white,
+                        color:Colors.white,
                         size: 25,
                       ),
                       label: Text(
                         buttonTitle!,
                         style: TextStyle(
-                          color: darkTheme ? Colors.black : Colors.white,
+                          color:Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: buttonColor, // Основной цвет кнопки
-                        foregroundColor: darkTheme ? Colors.black : Colors.white, // Цвет текста/иконки
+                        foregroundColor: Colors.white, // Цвет текста/иконки
                         shadowColor: Colors.black54, // Цвет тени
                         elevation: 5, // Высота кнопки
                         shape: RoundedRectangleBorder(

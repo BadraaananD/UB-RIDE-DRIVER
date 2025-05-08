@@ -6,7 +6,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:drivers/global/global.dart';
 import 'package:drivers/screens/forgot_password_screen.dart';
 import 'package:drivers/screens/main_screen.dart';
@@ -65,9 +64,6 @@ class _LoginScreenState extends State<LoginScreen>{
 
   @override
   Widget build(BuildContext context){
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -78,14 +74,14 @@ class _LoginScreenState extends State<LoginScreen>{
           children: [
             Column(
               children: [
-                Image.asset(darkTheme ? 'images/2.jpg' : 'images/1.jpg'),
+                Image.asset('images/1.jpg'),
 
                 SizedBox(height: 20),
 
                 Text(
                   'Нэвтрэх',
                   style: TextStyle(
-                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                    color:Colors.blue,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -112,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -120,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
@@ -155,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
+                                fillColor:Colors.grey.shade200,
                                 border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
                                   borderRadius: BorderRadius.circular(40), // <-- Исправлено
                                   borderSide: BorderSide(
@@ -163,11 +159,11 @@ class _LoginScreenState extends State<LoginScreen>{
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                prefixIcon: Icon(Icons.person, color: darkTheme ? Colors.amber.shade400 : Colors.grey,),
+                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.grey,
+                                    color:Colors.grey,
                                   ),
                                   onPressed: (){
                                     //update the state i.e toggle the state of passwordVisible variable
@@ -199,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen>{
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: darkTheme ? Colors.black : Colors.white, backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                          foregroundColor:Colors.white, backgroundColor:Colors.blue,
                           elevation: 0,
                           shape:  RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32),
@@ -226,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen>{
                           child: Text(
                             "Нууц үгээ мартсан уу?",
                             style: TextStyle(
-                              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                              color:Colors.blue,
                             ),
                           )
                          ),
@@ -254,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                   "Бүртгүүлэх",
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                                    color:Colors.blue,
                                    ),
                                   ),
                                 ),

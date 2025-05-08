@@ -1,4 +1,3 @@
-// import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:drivers/Assistants/assistant_methods.dart';
 import 'package:drivers/global/global.dart';
 import 'package:drivers/models/user_ride_request_information.dart';
@@ -19,9 +18,6 @@ class NotificationDialogBox extends StatefulWidget {
 class _NotificationDialogBoxState extends State<NotificationDialogBox> {
   @override
   Widget build(BuildContext context) {
-
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -33,15 +29,12 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: darkTheme ? Colors.black : Colors.white,
+          color: Colors.white,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              onlineDriverData.car_type == "Car" ? "images/car.png"
-                :onlineDriverData.car_type == "CNG" ? "images/cng.png"
-                : "images/bike.png",
+            Image.asset("images/car.png",
             ),
 
             SizedBox(height: 10,),
@@ -51,7 +44,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
-                color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                color: Colors.blue,
               ),
             ),
 
@@ -60,7 +53,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
             Divider(
               height: 2,
               thickness: 2,
-              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+              color: Colors.blue,
             ),
 
             Padding(
@@ -82,7 +75,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                             widget.userRideRequestDetails!.originAddress!,
                             style: TextStyle(
                               fontSize: 16,
-                              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                              color: Colors.blue,
                             ),
                           ),
                         ),
@@ -107,7 +100,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                             widget.userRideRequestDetails!.destinationAddress!,
                             style: TextStyle(
                               fontSize: 16,
-                              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                              color: Colors.blue,
                             ),
                           ),
                         ),
@@ -121,7 +114,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
             Divider(
               height: 2,
               thickness: 2,
-              color: darkTheme ? Colors.amber.shade400 : Colors.blue,
+              color: Colors.blue,
             ),
 
             //buttons for canceling and accepting the ride request
@@ -132,10 +125,6 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // audioPlayer.pause();
-                      // audioPlayer.stop();
-                      // audioPlayer = AssetsAudioPlayer();
-
                       Navigator.pop(context);
                     }, 
                     style: ElevatedButton.styleFrom(
@@ -153,10 +142,6 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
 
                   ElevatedButton(
                     onPressed: (){
-                      // audioPlayer.pause();
-                      // audioPlayer.stop();
-                      // audioPlayer = AssetsAudioPlayer();
-
                       acceptRideRequest(context);
                     },
                     style: ElevatedButton.styleFrom(
