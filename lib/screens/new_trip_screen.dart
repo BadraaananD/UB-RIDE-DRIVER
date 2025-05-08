@@ -300,6 +300,11 @@ class _NewTripScreenState extends State<NewTripScreen> {
     FirebaseDatabase.instance.ref().child("All Ride Requests").child(widget.userRideRequestDetails!.rideRequestId!).child("fareAmount").set(totalFareAmount.toString());
 
     FirebaseDatabase.instance.ref().child("All Ride Requests").child(widget.userRideRequestDetails!.rideRequestId!).child("status").set("ended");  
+    
+    if (streamSubscriptionDriverLivePosition != null) {
+      streamSubscriptionDriverLivePosition!.cancel();
+      streamSubscriptionDriverLivePosition = null;
+    }
 
     Navigator.pop(context);
 
