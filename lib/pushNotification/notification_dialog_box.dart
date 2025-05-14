@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class NotificationDialogBox extends StatefulWidget {
-  
   UserRideRequestInformation? userRideRequestDetails;
+
   NotificationDialogBox({this.userRideRequestDetails});
 
   @override
@@ -18,171 +18,148 @@ class NotificationDialogBox extends StatefulWidget {
 class _NotificationDialogBoxState extends State<NotificationDialogBox> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: Container(
         margin: EdgeInsets.all(8),
-        width: double.infinity,
+        width: screenWidth * 0.9,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(16),
           color: Colors.white,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset("images/car.png",
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.directions_car, size: 60, color: Colors.blueAccent),
 
-            SizedBox(height: 10,),
+              SizedBox(height: 10),
 
-            //title 
-            Text("New Ride Request",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: Colors.blue,
+              Text(
+                "New Ride Request",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: Colors.blue,
+                ),
               ),
-            ),
 
-            SizedBox(height: 14,),
+              SizedBox(height: 14),
 
-            Divider(
-              height: 2,
-              thickness: 2,
-              color: Colors.blue,
-            ),
+              Divider(height: 2, thickness: 2, color: Colors.blue),
 
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
+              SizedBox(height: 20),
+
+              // Origin
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Image.asset("images/origin.png",
-                        width: 30,
-                        height: 30,
-                      ),
-
-                      SizedBox(width: 10,),
-
-                      Expanded(
-                        child: Container(
-                          child: Text(
-                            widget.userRideRequestDetails!.originAddress!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                  Icon(Icons.location_on, color: Colors.blue, size: 28),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      widget.userRideRequestDetails!.originAddress!,
+                      style: TextStyle(fontSize: 16, color: Colors.blue[700]),
+                    ),
                   ),
-
-                  SizedBox(height: 20,),
-
-                  Row(
-                    children: [
-                      Image.asset("images/destination.png",
-                        width: 30,
-                        height: 30,
-                      ),
-
-                      SizedBox(width: 10,),
-
-                      Expanded(
-                        child: Container(
-                          child: Text(
-                            widget.userRideRequestDetails!.destinationAddress!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
                 ],
               ),
-            ),
 
-            Divider(
-              height: 2,
-              thickness: 2,
-              color: Colors.blue,
-            ),
+              SizedBox(height: 20),
 
-            //buttons for canceling and accepting the ride request
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              // Destination
+              Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }, 
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
+                  Icon(Icons.flag, color: Colors.blue, size: 28),
+                  SizedBox(width: 10),
+                  Expanded(
                     child: Text(
-                      "Cancel".toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    )
+                      widget.userRideRequestDetails!.destinationAddress!,
+                      style: TextStyle(fontSize: 16, color: Colors.blue[700]),
+                    ),
                   ),
-
-                  SizedBox(width: 20,),
-
-                  ElevatedButton(
-                    onPressed: (){
-                      acceptRideRequest(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: Text(
-                      "Accept".toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    )
                 ],
               ),
-              )
-          ],
+
+              SizedBox(height: 20),
+
+              Divider(height: 2, thickness: 2, color: Colors.blue),
+
+              SizedBox(height: 20),
+
+              // Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.cancel, size: 18),
+                      label: Text("Cancel".toUpperCase()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        acceptRideRequest(context);
+                      },
+                      icon: Icon(Icons.check_circle, size: 18),
+                      label: Text("Accept".toUpperCase()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+            ],
+          ),
         ),
       ),
     );
   }
 
-  acceptRideRequest(BuildContext context){
-    FirebaseDatabase.instance.ref()
-      .child("drivers")
-      .child(firebaseAuth.currentUser!.uid)
-      .child("newRideStatus")
-      .once()
-      .then((snap){
-        if(snap.snapshot.value == "idle"){
-          FirebaseDatabase.instance.ref().child("drivers").child(firebaseAuth.currentUser!.uid).child("newRideStatus").set("accepted");
+  void acceptRideRequest(BuildContext context) {
+    FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(firebaseAuth.currentUser!.uid)
+        .child("newRideStatus")
+        .once()
+        .then((snap) {
+      if (snap.snapshot.value == "idle") {
+        FirebaseDatabase.instance
+            .ref()
+            .child("drivers")
+            .child(firebaseAuth.currentUser!.uid)
+            .child("newRideStatus")
+            .set("accepted");
 
-          AssistantMethods.pauseLiveLocationUpdates();
+        AssistantMethods.pauseLiveLocationUpdates();
 
-          // trip started now - send driver to new tripScreen
-          Navigator.push(context, MaterialPageRoute(builder: (c) => NewTripScreen(
-            userRideRequestDetails: widget.userRideRequestDetails,
-          ))); 
-        }
-        else {
-          Fluttertoast.showToast(msg: "This Ride Request do not exists.");
-        }
-      });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (c) => NewTripScreen(
+              userRideRequestDetails: widget.userRideRequestDetails,
+            ),
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(msg: "This Ride Request does not exist.");
+      }
+    });
   }
 }
