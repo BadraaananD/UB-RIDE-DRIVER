@@ -117,59 +117,132 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
   }
 
   void showPassengerDialog(BuildContext context, Map<dynamic, dynamic> rideData) async {
-    // Если диалог уже открыт для этой поездки, закрываем его
-    if (_currentlyOpenRideId == rideData['rideId']) {
-      setState(() {
-        _currentlyOpenRideId = null;
-      });
-      Navigator.of(context).pop(true); // Закрываем диалог
-      return;
-    }
-
-    // Устанавливаем текущую поездку как открытую
+  if (_currentlyOpenRideId == rideData['rideId']) {
     setState(() {
-      _currentlyOpenRideId = rideData['rideId'];
+      _currentlyOpenRideId = null;
     });
+    Navigator.of(context).pop(true);
+    return;
+  }
 
-    List<Map<String, dynamic>> passengerDetails = await fetchPassengerNames(rideData['passenger_ids']);
+  setState(() {
+    _currentlyOpenRideId = rideData['rideId'];
+  });
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Информация о пассажирах"),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: passengerDetails.isEmpty
-                ? [const Text("Пассажиры не найдены")]
-                : passengerDetails
-                    .asMap()
-                    .entries
-                    .map((entry) => Text(
-                        "Пассажир ${entry.key + 1}: ${entry.value['name']} (${entry.value['booked_seats']} мест)"))
-                    .toList(),
+  List<Map<String, dynamic>> passengerDetails =
+      await fetchPassengerNames(rideData['passenger_ids']);
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      final screenWidth = MediaQuery.of(context).size.width;
+
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        elevation: 8,
+        child: Container(
+          width: screenWidth * 0.9, // 90% of screen width
+          constraints: const BoxConstraints(
+            maxHeight: 500, // optional: to prevent overflowing vertically
+          ),
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: const [
+                    Icon(Icons.people, color: Colors.deepPurple),
+                    SizedBox(width: 10),
+                    Text(
+                      "Зорчигчийн мэдээлэл",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                if (passengerDetails.isEmpty)
+                  const Text(
+                    "Пассажир олдсонгүй",
+                    style: TextStyle(color: Colors.grey),
+                  )
+                else
+                  ...passengerDetails.asMap().entries.map(
+                    (entry) {
+                      final seatCount = entry.value['booked_seats'] ?? 0;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.person, color: Colors.blueAccent),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Пассажир ${entry.key + 1}: ${entry.value['name']}",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: List.generate(
+                                      seatCount,
+                                      (index) => const Padding(
+                                        padding: EdgeInsets.only(right: 4),
+                                        child: Icon(Icons.event_seat, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ).toList(),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _currentlyOpenRideId = null;
+                      });
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.close),
+                    label: const Text("Хаах"),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _currentlyOpenRideId = null;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text("Закрыть"),
-          ),
-        ],
-      ),
-    ).then((_) {
-      // Сбрасываем состояние после закрытия диалога
-      setState(() {
-        _currentlyOpenRideId = null;
-      });
+      );
+    },
+  ).then((_) {
+    setState(() {
+      _currentlyOpenRideId = null;
     });
-  }
+  });
+}
+
+
 
   Widget buildRideCard(Map<dynamic, dynamic> rideData, BuildContext context) {
     DateTime dateTime = DateTime.parse(rideData['scheduled_time']).toLocal();
