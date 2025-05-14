@@ -28,6 +28,7 @@ dependencies:
   provider: ^6.1.2
   flutter_rating_bar: ^4.0.1
   intl: ^0.18.0
+  # flutter_local_notifications: ^9.9.1
   # assets_audio_player: ^3.0.2
 
 dev_dependencies:

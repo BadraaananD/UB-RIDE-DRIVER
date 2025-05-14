@@ -3,6 +3,9 @@ import 'package:drivers/tabPages/home_tab.dart';
 import 'package:drivers/tabPages/profile_tab.dart';
 import 'package:drivers/tabPages/ratings_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:drivers/tabPages/scheduled_rides_tab.dart';
+ // создаёшь эту страницу
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -27,7 +30,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   void initState(){
     super.initState();
 
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 5, vsync: this);
   }
 
   @override 
@@ -38,6 +41,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         controller: tabController,
         children: [
           HomeTabPage(),
+          ScheduledRidesTabPage(),
           EarningsTabPage(),
           RatingsTabPage(),
           ProfileTabPage(),
@@ -47,6 +51,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Нүүр"),
+          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: "Төлөвлөсөн"),
           BottomNavigationBarItem(icon: Icon(Icons.credit_card), label: "Орлого"),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: "Үнэлгээ"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Бүртгэл "),
