@@ -14,6 +14,7 @@ class ScheduledRidesTabPage extends StatefulWidget {
 class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
   List<Map<dynamic, dynamic>> acceptedRides = [];
   List<Map<dynamic, dynamic>> availableRides = [];
+  String? _currentlyOpenRideId; // Для отслеживания открытого диалога
 
   @override
   void initState() {
@@ -40,6 +41,17 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
         data.forEach((key, value) {
           print("Ride key: $key, Data: $value");
           value['rideId'] = key;
+
+          // Суммируем booked_seats для всех пассажиров
+          int totalBookedSeats = 0;
+          if (value['passenger_ids'] != null && value['passenger_ids'] is Map) {
+            Map<dynamic, dynamic> passengers = value['passenger_ids'];
+            passengers.forEach((passengerId, passengerData) {
+              totalBookedSeats += (passengerData['booked_seats'] as num?)?.toInt() ?? 0;
+            });
+          }
+          value['total_booked_seats'] = totalBookedSeats;
+
           if (value['status'] == 'accepted' && value['driver_id'] == userModelCurrentInfo?.id) {
             accepted.add(Map<dynamic, dynamic>.from(value));
           } else if (value['status'] == 'pending') {
@@ -64,6 +76,101 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
     });
   }
 
+  Future<List<Map<String, dynamic>>> fetchPassengerNames(Map<dynamic, dynamic>? passengerIds) async {
+    List<Map<String, dynamic>> passengerDetails = [];
+    if (passengerIds == null || passengerIds.isEmpty) {
+      return passengerDetails;
+    }
+
+    for (var passengerId in passengerIds.keys.take(4)) {
+      try {
+        DatabaseReference userRef = FirebaseDatabase.instance
+            .ref()
+            .child("users")
+            .child(passengerId);
+
+        DataSnapshot snapshot = await userRef.get();
+        int bookedSeats = passengerIds[passengerId]['booked_seats']?.toInt() ?? 0;
+
+        if (snapshot.exists) {
+          Map<dynamic, dynamic> userData = snapshot.value as Map<dynamic, dynamic>;
+          String name = userData['name'] ?? 'Unknown';
+          passengerDetails.add({
+            'name': name,
+            'booked_seats': bookedSeats,
+          });
+        } else {
+          passengerDetails.add({
+            'name': 'Unknown',
+            'booked_seats': bookedSeats,
+          });
+        }
+      } catch (e) {
+        print("Error fetching passenger name for ID $passengerId: $e");
+        passengerDetails.add({
+          'name': 'Unknown',
+          'booked_seats': 0,
+        });
+      }
+    }
+    return passengerDetails;
+  }
+
+  void showPassengerDialog(BuildContext context, Map<dynamic, dynamic> rideData) async {
+    // Если диалог уже открыт для этой поездки, закрываем его
+    if (_currentlyOpenRideId == rideData['rideId']) {
+      setState(() {
+        _currentlyOpenRideId = null;
+      });
+      Navigator.of(context).pop(true); // Закрываем диалог
+      return;
+    }
+
+    // Устанавливаем текущую поездку как открытую
+    setState(() {
+      _currentlyOpenRideId = rideData['rideId'];
+    });
+
+    List<Map<String, dynamic>> passengerDetails = await fetchPassengerNames(rideData['passenger_ids']);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Информация о пассажирах"),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: passengerDetails.isEmpty
+                ? [const Text("Пассажиры не найдены")]
+                : passengerDetails
+                    .asMap()
+                    .entries
+                    .map((entry) => Text(
+                        "Пассажир ${entry.key + 1}: ${entry.value['name']} (${entry.value['booked_seats']} мест)"))
+                    .toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _currentlyOpenRideId = null;
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("Закрыть"),
+          ),
+        ],
+      ),
+    ).then((_) {
+      // Сбрасываем состояние после закрытия диалога
+      setState(() {
+        _currentlyOpenRideId = null;
+      });
+    });
+  }
+
   Widget buildRideCard(Map<dynamic, dynamic> rideData, BuildContext context) {
     DateTime dateTime = DateTime.parse(rideData['scheduled_time']).toLocal();
     String formattedDay = DateFormat('yyyy-MM-dd').format(dateTime);
@@ -75,231 +182,206 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
     double cardWidth = MediaQuery.of(context).size.width * 0.8;
     cardWidth = cardWidth.clamp(250, 300);
 
-    return SizedBox(
-      width: cardWidth,
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 3,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text.rich(
+    return GestureDetector(
+      onTap: () => showPassengerDialog(context, rideData),
+      child: SizedBox(
+        width: cardWidth,
+        child: Card(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'Эхлэх цэг: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${rideData['originAddress']}',
+                        ),
+                      ],
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Flexible(
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'Очих цэг: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${rideData['destinationAddress']}',
+                        ),
+                      ],
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text.rich(
                   TextSpan(
                     children: [
                       const TextSpan(
-                        text: 'Эхлэх цэг: ',
+                        text: 'Өдөр: ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: '${rideData['originAddress']}',
+                        text: formattedDay,
                       ),
                     ],
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
                 ),
-              ),
-              const SizedBox(height: 4),
-              Flexible(
-                child: Text.rich(
+                Text.rich(
                   TextSpan(
                     children: [
                       const TextSpan(
-                        text: 'Очих цэг: ',
+                        text: 'Цаг: ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: '${rideData['destinationAddress']}',
+                        text: formattedTime,
                       ),
                     ],
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Хэрэглэгч: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${rideData['userName'] ?? 'Unknown'}',
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Утас: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${rideData['userPhone'] ?? 'Unknown'}',
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Өдөр: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: formattedDay,
-                    ),
-                  ],
-                ),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Цаг: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: formattedTime,
-                    ),
-                  ],
-                ),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Суудлын тоо: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '4 / ${rideData['booked_seats']}',
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (rideData['status'] == 'pending')
-                    ElevatedButton(
-                      onPressed: () async {
-                        final rideId = rideData['rideId'];
-                        if (rideId == null || rideId.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Ошибка: ID поездки не найден")),
-                          );
-                          return;
-                        }
-
-                        if (userModelCurrentInfo == null || userModelCurrentInfo!.id == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Ошибка: Информация о водителе отсутствует")),
-                          );
-                          return;
-                        }
-
-                        DatabaseReference rideRef = FirebaseDatabase.instance
-                            .ref()
-                            .child("All Ride Requests")
-                            .child(rideId);
-
-                        try {
-                          await rideRef.update({
-                            "status": "accepted",
-                            "driver_id": userModelCurrentInfo!.id!,
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Поездка успешно принята")),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Ошибка при принятии поездки: $e")),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(100, 36),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Суудлын тоо: ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      child: const Text("Хүлээн авах"),
-                    ),
-                  if (rideData['status'] == 'accepted' && isCurrentDriver)
-                    ElevatedButton(
-                      onPressed: () async {
-                        final rideId = rideData['rideId'];
-                        if (rideId == null || rideId.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Ошибка: ID поездки не найден")),
-                          );
-                          return;
-                        }
-
-                        bool? confirm = await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text("Отменить поездку"),
-                            content: const Text("Вы уверены, что хотите отменить эту поездку?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: const Text("Нет"),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: const Text("Да"),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        if (confirm != true) return;
-
-                        DatabaseReference rideRef = FirebaseDatabase.instance
-                            .ref()
-                            .child("All Ride Requests")
-                            .child(rideId);
-
-                        try {
-                          await rideRef.update({
-                            "status": "pending",
-                            "driver_id": null,
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Поездка успешно отменена")),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Ошибка при отмене поездки: $e")),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(100, 36),
+                      TextSpan(
+                        text: '4 / ${rideData['total_booked_seats'] ?? 0}',
                       ),
-                      child: const Text("Цуцлах"),
-                    ),
-                ],
-              ),
-            ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (rideData['status'] == 'pending')
+                      ElevatedButton(
+                        onPressed: () async {
+                          final rideId = rideData['rideId'];
+                          if (rideId == null || rideId.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Ошибка: ID поездки не найден")),
+                            );
+                            return;
+                          }
+
+                          if (userModelCurrentInfo == null || userModelCurrentInfo!.id == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Ошибка: Информация о водителе отсутствует")),
+                            );
+                            return;
+                          }
+
+                          DatabaseReference rideRef = FirebaseDatabase.instance
+                              .ref()
+                              .child("All Ride Requests")
+                              .child(rideId);
+
+                          try {
+                            await rideRef.update({
+                              "status": "accepted",
+                              "driver_id": userModelCurrentInfo!.id!,
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Поездка успешно принята")),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Ошибка при принятии поездки: $e")),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(100, 36),
+                        ),
+                        child: const Text("Хүлээн авах"),
+                      ),
+                    if (rideData['status'] == 'accepted' && isCurrentDriver)
+                      ElevatedButton(
+                        onPressed: () async {
+                          final rideId = rideData['rideId'];
+                          if (rideId == null || rideId.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Ошибка: ID поездки не найден")),
+                            );
+                            return;
+                          }
+
+                          bool? confirm = await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text("Отменить поездку"),
+                              content: const Text("Вы уверены, что хотите отменить эту поездку?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  child: const Text("Нет"),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text("Да"),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirm != true) return;
+
+                          DatabaseReference rideRef = FirebaseDatabase.instance
+                              .ref()
+                              .child("All Ride Requests")
+                              .child(rideId);
+
+                          try {
+                            await rideRef.update({
+                              "status": "pending",
+                              "driver_id": null,
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Поездка успешно отменена")),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Ошибка при отмене поездки: $e")),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(100, 36),
+                        ),
+                        child: const Text("Цуцлах"),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
