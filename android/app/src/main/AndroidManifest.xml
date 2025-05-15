@@ -8,7 +8,7 @@
 
 
     <application
-        android:label="drivers"
+        android:label="UB Ride Driver"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

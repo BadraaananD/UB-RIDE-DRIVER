@@ -187,7 +187,7 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Пассажир ${entry.key + 1}: ${entry.value['name']}",
+                                    "/*Зорчигч ${entry.key + 1}:*/ ${entry.value['name']}",
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                   const SizedBox(height: 4),
