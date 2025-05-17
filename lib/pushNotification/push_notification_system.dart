@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PushNotificationSystem {
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
+  final Set<String> processedRideRequestIds = {};
 
   Future<void> initializeCloudMessaging(BuildContext context) async {
     try {
@@ -29,34 +30,37 @@ class PushNotificationSystem {
 
       // 1. Terminated: приложение закрыто, открыто через уведомление
       FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? remoteMessage) {
-        if (remoteMessage != null && remoteMessage.data["rideRequestId"] != null) {
+        if (remoteMessage != null && remoteMessage.data["rideRequestId"] != null && !processedRideRequestIds.contains(remoteMessage.data["rideRequestId"])) {
           print("Terminated notification received: ${remoteMessage.notification?.title}");
           print("Notification data: ${remoteMessage.data}");
+          processedRideRequestIds.add(remoteMessage.data["rideRequestId"]);
           readUserRideRequestInformation(remoteMessage.data["rideRequestId"], context);
         } else {
-          print("No initial message or missing rideRequestId");
+          print("No initial message or missing rideRequestId or already processed");
         }
       });
 
       // 2. Foreground: приложение открыто
       FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
-        if (remoteMessage != null && remoteMessage.data["rideRequestId"] != null) {
+        if (remoteMessage != null && remoteMessage.data["rideRequestId"] != null && !processedRideRequestIds.contains(remoteMessage.data["rideRequestId"])) {
           print("Foreground notification received: ${remoteMessage.notification?.title}");
           print("Notification data: ${remoteMessage.data}");
+          processedRideRequestIds.add(remoteMessage.data["rideRequestId"]);
           readUserRideRequestInformation(remoteMessage.data["rideRequestId"], context);
         } else {
-          print("Invalid foreground notification: missing rideRequestId or null message");
+          print("Invalid foreground notification: missing rideRequestId or already processed");
         }
       });
 
       // 3. Background: приложение в фоне, открыто через уведомление
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
-        if (remoteMessage != null && remoteMessage.data["rideRequestId"] != null) {
+        if (remoteMessage != null && remoteMessage.data["rideRequestId"] != null && !processedRideRequestIds.contains(remoteMessage.data["rideRequestId"])) {
           print("Background notification opened: ${remoteMessage.notification?.title}");
           print("Notification data: ${remoteMessage.data}");
+          processedRideRequestIds.add(remoteMessage.data["rideRequestId"]);
           readUserRideRequestInformation(remoteMessage.data["rideRequestId"], context);
         } else {
-          print("Invalid background notification: missing rideRequestId or null message");
+          print("Invalid background notification: missing rideRequestId or already processed");
         }
       });
     } catch (e) {
@@ -66,6 +70,7 @@ class PushNotificationSystem {
   }
 
   void readUserRideRequestInformation(String userRideRequestId, BuildContext context) {
+    print("Processing ride request with ID: $userRideRequestId");
     FirebaseDatabase.instance
         .ref()
         .child("All Ride Requests")
@@ -73,24 +78,31 @@ class PushNotificationSystem {
         .once()
         .then((DatabaseEvent event) {
       final snapData = event.snapshot;
-      if (snapData.value == null) {
-        print("Ride request not found: $userRideRequestId");
-        Fluttertoast.showToast(msg: "This Ride Request does not exist.");
+      if (!snapData.exists) {
+        print("Ride request $userRideRequestId not found or already processed");
         return;
       }
 
       final rideData = snapData.value as Map<dynamic, dynamic>?;
       if (rideData == null) {
         print("Ride request data is null for ID: $userRideRequestId");
-        Fluttertoast.showToast(msg: "Invalid ride request data.");
+        if (context.mounted) {
+          Fluttertoast.showToast(msg: "Invalid ride request data.");
+        } else {
+          print("Context not mounted, skipping toast for invalid data");
+        }
         return;
       }
 
-      // Проверяем статус driverId
       final driverId = rideData["driverId"]?.toString();
+      print("DriverId: $driverId, Current user: ${firebaseAuth.currentUser!.uid}, Ride ID: $userRideRequestId");
       if (driverId != "waiting" && driverId != firebaseAuth.currentUser!.uid) {
         print("Ride request cancelled or assigned to another driver: $userRideRequestId");
-        Fluttertoast.showToast(msg: "This Ride Request has been cancelled or assigned.");
+        if (context.mounted) {
+          Fluttertoast.showToast(msg: "This Ride Request has been cancelled or assigned.");
+        } else {
+          print("Context not mounted, skipping toast for cancelled/assigned request");
+        }
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
@@ -98,18 +110,19 @@ class PushNotificationSystem {
       }
 
       try {
-        // Безопасно извлекаем данные
         final origin = rideData["origin"] as Map<dynamic, dynamic>?;
         final destination = rideData["destination"] as Map<dynamic, dynamic>?;
 
-        // Проверяем наличие координат и адресов
         if (origin == null || destination == null) {
           print("Missing origin or destination data for ride: $userRideRequestId");
-          Fluttertoast.showToast(msg: "Invalid ride request: missing location data.");
+          if (context.mounted) {
+            Fluttertoast.showToast(msg: "Invalid ride request: missing location data.");
+          } else {
+            print("Context not mounted, skipping toast for missing location data");
+          }
           return;
         }
 
-        // Парсим координаты с обработкой ошибок
         double originLat = 0.0;
         double originLng = 0.0;
         double destinationLat = 0.0;
@@ -117,16 +130,19 @@ class PushNotificationSystem {
 
         try {
           originLat = double.parse(origin["latitude"]?.toString() ?? "0.0");
-          originLng = double.parse(origin["longitude"]?.toString() ?? "0.0"); // Исправлено: longitute -> longitude
+          originLng = double.parse(origin["longitude"]?.toString() ?? "0.0");
           destinationLat = double.parse(destination["latitude"]?.toString() ?? "0.0");
           destinationLng = double.parse(destination["longitude"]?.toString() ?? "0.0");
         } catch (e) {
           print("Error parsing coordinates for ride $userRideRequestId: $e");
-          Fluttertoast.showToast(msg: "Invalid location data in ride request.");
+          if (context.mounted) {
+            Fluttertoast.showToast(msg: "Invalid location data in ride request.");
+          } else {
+            print("Context not mounted, skipping toast for invalid location data");
+          }
           return;
         }
 
-        // Извлекаем адреса и пользовательские данные
         String originAddress = rideData["originAddress"]?.toString() ?? "Unknown";
         String destinationAddress = rideData["destinationAddress"]?.toString() ?? "Unknown";
         String userName = rideData["userName"]?.toString() ?? "Unknown";
@@ -138,7 +154,6 @@ class PushNotificationSystem {
             "originAddress=$originAddress, destinationAddress=$destinationAddress, "
             "userName=$userName, userPhone=$userPhone");
 
-        // Создаём объект UserRideRequestInformation
         UserRideRequestInformation userRideRequestDetails = UserRideRequestInformation();
         userRideRequestDetails.originLatLng = LatLng(originLat, originLng);
         userRideRequestDetails.originAddress = originAddress;
@@ -148,51 +163,98 @@ class PushNotificationSystem {
         userRideRequestDetails.userPhone = userPhone;
         userRideRequestDetails.rideRequestId = userRideRequestId;
 
-        // Показываем диалог
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) => NotificationDialogBox(
-            userRideRequestDetails: userRideRequestDetails,
-          ),
-        ).then((_) {
-          print("Notification dialog closed for ride: $userRideRequestId");
-        });
+        // Проверяем, не открыт ли уже диалог
+        if (context.mounted && ModalRoute.of(context)?.isCurrent == true) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => NotificationDialogBox(
+              userRideRequestDetails: userRideRequestDetails,
+            ),
+          ).then((_) {
+            print("Notification dialog closed for ride: $userRideRequestId");
+            processedRideRequestIds.remove(userRideRequestId); // Очищаем после закрытия
+          });
+        } else {
+          print("Context not mounted or not current route, skipping dialog for ride: $userRideRequestId");
+        }
       } catch (e) {
         print("Error processing ride request $userRideRequestId: $e");
-        Fluttertoast.showToast(msg: "Error processing ride request: $e");
+        if (context.mounted) {
+          Fluttertoast.showToast(msg: "Error processing ride request: $e");
+        } else {
+          print("Context not mounted, skipping toast for error: $e");
+        }
       }
     }).catchError((e) {
       print("Error reading ride request $userRideRequestId: $e");
-      Fluttertoast.showToast(msg: "Error reading ride request: $e");
+      if (context.mounted) {
+        Fluttertoast.showToast(msg: "Error reading ride request: $e");
+      } else {
+        print("Context not mounted, skipping toast for error: $e");
+      }
     });
   }
 
   Future<void> generateAndGetToken() async {
     try {
+      // Удаляем старый токен, чтобы получить новый для текущей сессии
+      await messaging.deleteToken();
       String? registrationToken = await messaging.getToken();
       if (registrationToken == null) {
         print('Failed to generate FCM token');
+        Fluttertoast.showToast(msg: "Failed to generate FCM token");
         return;
       }
       print("FCM registration Token: $registrationToken");
 
-      // Сохраняем токен в fcmToken
-      await FirebaseDatabase.instance
+      // Проверяем текущий токен в базе данных
+      final driverRef = FirebaseDatabase.instance
           .ref()
           .child("drivers")
-          .child(firebaseAuth.currentUser!.uid)
-          .child("fcmToken")
-          .set(registrationToken);
+          .child(firebaseAuth.currentUser!.uid);
+      final tokenSnapshot = await driverRef.child("fcmToken").get();
+      if (tokenSnapshot.exists && tokenSnapshot.value == registrationToken) {
+        print("FCM token unchanged, no update needed");
+        return;
+      }
 
-      // Подписка на топики (можно удалить, если не используются)
-      await messaging.subscribeToTopic("allDrivers");
-      await messaging.subscribeToTopic("allUsers");
-
+      // Сохраняем новый токен
+      await driverRef.child("fcmToken").set(registrationToken);
       print('FCM token saved successfully');
+
+      // Подписка на топик только для водителей
+      await messaging.subscribeToTopic("allDrivers");
+      // Отписываемся от allUsers, если не нужно
+      await messaging.unsubscribeFromTopic("allUsers");
     } catch (e) {
       print('Error generating or saving FCM token: $e');
       Fluttertoast.showToast(msg: "Error saving FCM token: $e");
+    }
+  }
+
+  Future<void> clearFcmTokenOnLogout() async {
+    try {
+      final driverRef = FirebaseDatabase.instance
+          .ref()
+          .child("drivers")
+          .child(firebaseAuth.currentUser!.uid);
+
+      // Удаляем токен из базы данных
+      await driverRef.child("fcmToken").remove();
+      print("FCM token removed from database");
+
+      // Отписываемся от топиков
+      await messaging.unsubscribeFromTopic("allDrivers");
+      await messaging.unsubscribeFromTopic("allUsers");
+      print("Unsubscribed from FCM topics");
+
+      // Удаляем локальный токенЖ
+      await messaging.deleteToken();
+      print("Local FCM token deleted");
+    } catch (e) {
+      print("Error clearing FCM token on logout: $e");
+      Fluttertoast.showToast(msg: "Error clearing FCM token: $e");
     }
   }
 }

@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:drivers/global/global.dart';
 import 'package:drivers/screens/forgot_password_screen.dart';
 import 'package:drivers/screens/main_screen.dart';
+import 'package:drivers/pushNotification/push_notification_system.dart';
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({Key? key}) : super(key: key);
@@ -29,38 +30,32 @@ class _LoginScreenState extends State<LoginScreen>{
   final _formKey = GlobalKey<FormState>();
 
     void _submit() async {
-    //validate all the form fields
-    if(_formKey.currentState!.validate()){
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: emailTextEditingController.text.trim(), 
-        password: passwordTextEditingController.text.trim()
-        ).then((auth) async { 
-          DatabaseReference userRef = FirebaseDatabase.instance.ref().child("drivers"); 
-          userRef.child(firebaseAuth.currentUser!.uid).once().then((value) async {
-            final snap = value.snapshot;
-            if(snap.value != null){
-              currentUser = auth.user;
-              // currentUser = FirebaseAuth.instance.currentUser;
-
-              await Fluttertoast.showToast(msg: "Амжилттай нэвтэрлээ");
-              Navigator.push(context, MaterialPageRoute(builder: (c) => MainScreen()));
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => MainScreen()));
-
-            }
-            else {
-              await Fluttertoast.showToast(msg: "Энэ имэйлд бүртгэл байхгүй байна");
-              firebaseAuth.signOut();
-              Navigator.push(context, MaterialPageRoute(builder: (c) => SplashScreen()));
-            }
-          });
-        }).catchError((errorMessage) {
-          Fluttertoast.showToast(msg: "Алдаа гарлаа: \n $errorMessage");
-        });
+  if (_formKey.currentState!.validate()) {
+    try {
+      final auth = await _firebaseAuth.signInWithEmailAndPassword(
+        email: emailTextEditingController.text.trim(),
+        password: passwordTextEditingController.text.trim(),
+      );
+      final userRef = FirebaseDatabase.instance.ref().child("drivers");
+      final snap = await userRef.child(auth.user!.uid).once();
+      if (snap.snapshot.value != null) {
+        currentUser = auth.user;
+        final pushNotificationSystem = PushNotificationSystem();
+        await pushNotificationSystem.generateAndGetToken();
+        await Fluttertoast.showToast(msg: "Амжилттай нэвтэрлээ");
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => MainScreen()));
+      } else {
+        await Fluttertoast.showToast(msg: "Энэ имэйлд бүртгэл байхгүй байна");
+        await _firebaseAuth.signOut();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => SplashScreen()));
+      }
+    } catch (errorMessage) {
+      Fluttertoast.showToast(msg: "Алдаа гарлаа: \n$errorMessage");
     }
-    else {
-      Fluttertoast.showToast(msg: "Зарим талбар буруу байна");
-    }
-  } 
+  } else {
+    Fluttertoast.showToast(msg: "Зарим талбар буруу байна");
+  }
+}
 
   @override
   Widget build(BuildContext context){

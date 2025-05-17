@@ -5,9 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:drivers/infoHandler/app_info.dart';
 import 'package:drivers/splashScreen/splash_screen.dart';
 
+void checkFcmToken() async {
+  String? currentToken = await FirebaseMessaging.instance.getToken();
+  print("Текущий FCM-токен: $currentToken");
+  if (currentToken == null) {
+    print("Ошибка: FCM-токен не сгенерирован");
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  checkFcmToken();
 
   // Инициализация FCM
   FirebaseMessaging messaging = FirebaseMessaging.instance;

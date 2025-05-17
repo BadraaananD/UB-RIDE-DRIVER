@@ -4,6 +4,7 @@ import 'package:drivers/splashScreen/splash_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:drivers/pushNotification/push_notification_system.dart';
 
 class ProfileTabPage extends StatefulWidget {
   const ProfileTabPage({super.key});
@@ -308,18 +309,21 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     SizedBox(height: 20,),
 
                     ElevatedButton(
-                      onPressed: () async {
-                        await AssistantMethods.driverIsOfflineNow();
-                        await firebaseAuth.signOut();
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (c) => SplashScreen()));
-                      }, 
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                      ),
-                      child: Text("Гарах"),
-                    ),
+  onPressed: () async {
+    await AssistantMethods.driverIsOfflineNow();
+    final pushNotificationSystem = PushNotificationSystem();
+    await pushNotificationSystem.clearFcmTokenOnLogout();
+    await firebaseAuth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (c) => SplashScreen()),
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.redAccent,
+  ),
+  child: Text("Гарах"),
+),
                   ],
                 ),
               ),

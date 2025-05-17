@@ -35,6 +35,25 @@ class _HomeTabPageState extends State<HomeTabPage> with WidgetsBindingObserver{
   Color buttonColor = Colors.grey;
   bool isDriverActive = false; 
 
+  checkDriverStatus() async {
+  DatabaseReference activeDriversRef = FirebaseDatabase.instance.ref().child("activeDrivers").child(currentUser!.uid);
+  activeDriversRef.once().then((snap) {
+    if (snap.snapshot.value != null) {
+      setState(() {
+        statusText = "Одоо онлайн байна";
+        isDriverActive = true;
+        buttonColor = Colors.transparent;
+      });
+    } else {
+      setState(() {
+        statusText = "Одоо оффлайн байна";
+        isDriverActive = false;
+        buttonColor = Colors.grey;
+      });
+    }
+  });
+}
+
   checkIfLocationPermissionAllowed() async{
     _locationPermission = await Geolocator.requestPermission();
     if(_locationPermission == LocationPermission.denied){
@@ -99,12 +118,12 @@ class _HomeTabPageState extends State<HomeTabPage> with WidgetsBindingObserver{
     // TODO: implement initState
     super.initState();
 
+    checkDriverStatus();
     checkIfLocationPermissionAllowed();
     readCurrentDriverInformation();
 
     PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
     pushNotificationSystem.initializeCloudMessaging(context);
-    pushNotificationSystem.generateAndGetToken();
 
     AssistantMethods.setupPresenceSystem();
     WidgetsBinding.instance.addObserver(this);
