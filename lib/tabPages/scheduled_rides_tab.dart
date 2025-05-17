@@ -1,8 +1,10 @@
 import 'package:drivers/global/global.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/firebase_database.dart' as rtdb;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ScheduledRidesTabPage extends StatefulWidget {
   const ScheduledRidesTabPage({super.key});
@@ -19,13 +21,33 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
   @override
   void initState() {
     super.initState();
+    registerFcmToken(userModelCurrentInfo?.id);
     print("userModelCurrentInfo: $userModelCurrentInfo, ID: ${userModelCurrentInfo?.id}");
     print("Firebase Auth UID: ${FirebaseAuth.instance.currentUser?.uid}");
     fetchRides();
   }
 
+  void registerFcmToken(String? driverId) async {
+  if (driverId == null) return;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  String? fcmToken = await messaging.getToken();
+  if (fcmToken != null) {
+    await FirebaseFirestore.instance.collection('drivers').doc(driverId).set({
+      'fcmToken': fcmToken,
+      'fcmTokenTimestamp': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+    print('FCM-токен зарегистрирован для водителя: $driverId');
+  }
+  messaging.onTokenRefresh.listen((newToken) {
+    FirebaseFirestore.instance.collection('drivers').doc(driverId).set({
+      'fcmToken': newToken,
+      'fcmTokenTimestamp': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  });
+}
+
   void fetchRides() {
-    Query ref = FirebaseDatabase.instance
+    rtdb.Query ref = rtdb.FirebaseDatabase.instance
         .ref()
         .child("All Ride Requests")
         .orderByChild("ride_type")
@@ -84,12 +106,12 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
 
     for (var passengerId in passengerIds.keys.take(4)) {
       try {
-        DatabaseReference userRef = FirebaseDatabase.instance
+        rtdb.DatabaseReference userRef = rtdb.FirebaseDatabase.instance
             .ref()
             .child("users")
             .child(passengerId);
 
-        DataSnapshot snapshot = await userRef.get();
+        rtdb.DataSnapshot snapshot = await userRef.get();
         int bookedSeats = passengerIds[passengerId]['booked_seats']?.toInt() ?? 0;
 
         if (snapshot.exists) {
@@ -366,7 +388,7 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
                             return;
                           }
 
-                          DatabaseReference rideRef = FirebaseDatabase.instance
+                          rtdb.DatabaseReference rideRef = rtdb.FirebaseDatabase.instance
                               .ref()
                               .child("All Ride Requests")
                               .child(rideId);
@@ -424,7 +446,7 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
 
                           if (confirm != true) return;
 
-                          DatabaseReference rideRef = FirebaseDatabase.instance
+                          rtdb.DatabaseReference rideRef = rtdb.FirebaseDatabase.instance
                               .ref()
                               .child("All Ride Requests")
                               .child(rideId);
@@ -451,6 +473,72 @@ class _ScheduledRidesTabPageState extends State<ScheduledRidesTabPage> {
                         ),
                         child: const Text("Цуцлах"),
                       ),
+                      ElevatedButton(
+  onPressed: () async {
+    final rideId = rideData['rideId'];
+    if (rideId == null || rideId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Ошибка: ID поездки не найден")),
+      );
+      return;
+    }
+    rtdb.DatabaseReference rideRef = rtdb.FirebaseDatabase.instance
+        .ref()
+        .child("All Ride Requests")
+        .child(rideId);
+    try {
+      await rideRef.update({
+        "status": "driverComing",
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Статус обновлён: водитель выехал")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Ошибка: $e")),
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue,
+    foregroundColor: Colors.white,
+    minimumSize: const Size(100, 36),
+  ),
+  child: const Text("Выехал"),
+),
+ElevatedButton(
+  onPressed: () async {
+    final rideId = rideData['rideId'];
+    if (rideId == null || rideId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Ошибка: ID поездки не найден")),
+      );
+      return;
+    }
+    rtdb.DatabaseReference rideRef = rtdb.FirebaseDatabase.instance
+        .ref()
+        .child("All Ride Requests")
+        .child(rideId);
+    try {
+      await rideRef.update({
+        "status": "driverArrived",
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Статус обновлён: водитель прибыл")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Ошибка: $e")),
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue,
+    foregroundColor: Colors.white,
+    minimumSize: const Size(100, 36),
+  ),
+  child: const Text("Прибыл"),
+),
                   ],
                 ),
               ],
