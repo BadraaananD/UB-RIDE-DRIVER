@@ -33,7 +33,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
 
             Text(
               //"Trip Fare Amount
-              "Trip Fare Amount",
+              "Аялалын нийт төлбөр",
               style: TextStyle(fontWeight: FontWeight.bold,
                color: Colors.white,
                fontSize: 20,
@@ -48,17 +48,17 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
                ),
             ),
 
-            SizedBox(height: 10,),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                "This is the total trip amount. Please collect it from the user",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            // SizedBox(height: 10,),
+            // Padding(
+            //   padding: EdgeInsets.all(8),
+            //   child: Text(
+            //     "Энд аялалын нийт төлбөр байна. Хэрэглэгчээс цуглуулна уу",
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
 
             SizedBox(height: 10,),
 
@@ -76,7 +76,7 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Collect Cash",
+                    Text("Бэлэн мөнгө авах",
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.blue,
@@ -84,14 +84,16 @@ class _FareAmountCollectionDialogState extends State<FareAmountCollectionDialog>
                       ),
                     ),
 
-                    Text(
-                      "₮ " + widget.totalFareAmount.toString(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+
+                    // закомментил перед дипломом
+                    // Text(
+                    //   "\n₮ " + widget.totalFareAmount.toString(),
+                    //   style: TextStyle(
+                    //     fontSize: 20,
+                    //     color: Colors.blue,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

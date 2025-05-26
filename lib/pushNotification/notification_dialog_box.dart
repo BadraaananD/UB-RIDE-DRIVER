@@ -41,10 +41,10 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
               SizedBox(height: 10),
 
               Text(
-                "New Ride Request",
+                "Шинэ аялалын хүсэлт",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 18,
                   color: Colors.blue,
                 ),
               ),
@@ -100,7 +100,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                         Navigator.pop(context);
                       },
                       icon: Icon(Icons.cancel, size: 18),
-                      label: Text("Cancel".toUpperCase()),
+                      label: Text("Цуцлах".toUpperCase()),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         padding: EdgeInsets.symmetric(vertical: 12),
@@ -114,7 +114,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                         acceptRideRequest(context);
                       },
                       icon: Icon(Icons.check_circle, size: 18),
-                      label: Text("Accept".toUpperCase()),
+                      label: Text("Батлах".toUpperCase()),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         padding: EdgeInsets.symmetric(vertical: 12),
@@ -158,7 +158,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
           ),
         );
       } else {
-        Fluttertoast.showToast(msg: "This Ride Request does not exist.");
+        Fluttertoast.showToast(msg: "Аялалын хүсэлт байхгүй байна.");
       }
     });
   }

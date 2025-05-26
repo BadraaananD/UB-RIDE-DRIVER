@@ -120,8 +120,8 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
 
                       SizedBox(height: 8,),
 
-                      Text(" ${widget.tripsHistoryModel!.status!}",
-                        style:TextStyle(
+                      Text(" ${widget.tripsHistoryModel!.status! == 'ended' ? 'Дууссан' : widget.tripsHistoryModel!.status!}",
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                         )
                       )

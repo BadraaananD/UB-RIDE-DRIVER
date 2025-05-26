@@ -30,27 +30,27 @@ class _RatingsTabPageState extends State<RatingsTabPage> {
   void setupRatingsTitle() {
     if (ratingsNumber >= 0) {
       setState(() {
-        titleStarsRating = "Very Bad";
+        titleStarsRating = "Маш муу";
       });
     }
     if (ratingsNumber >= 1) {
       setState(() {
-        titleStarsRating = "Bad";
+        titleStarsRating = "Муу";
       });
     }
     if (ratingsNumber >= 2) {
       setState(() {
-        titleStarsRating = "Good";
+        titleStarsRating = "Сайн";
       });
     }
     if (ratingsNumber >= 3) {
       setState(() {
-        titleStarsRating = "Very Good";
+        titleStarsRating = "Маш сайн";
       });
     }
     if (ratingsNumber >= 4) {
       setState(() {
-        titleStarsRating = "Excellent";
+        titleStarsRating = "Онц";
       });
     }
   }
