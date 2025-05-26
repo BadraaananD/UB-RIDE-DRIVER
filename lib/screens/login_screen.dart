@@ -64,23 +64,27 @@ class _LoginScreenState extends State<LoginScreen>{
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        body: ListView(
-          padding: EdgeInsets.all(0),
+        body: SafeArea(
+  child: Center(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 600),
+      child: Padding(
+        padding: EdgeInsets.all(16.0), // Заменяет padding: EdgeInsets.all(0)
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // Добавить центрирование по вертикали
           children: [
-            Column(
-              children: [
-                Image.asset('images/1.jpg'),
+                // Image.asset('images/1.jpg'),
 
-                SizedBox(height: 20),
+                // SizedBox(height: 20),
 
                 Text(
-                  'Нэвтрэх',
-                  style: TextStyle(
-                    color:Colors.blue,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ), // <-- ЗАКРЫЛ `Text(...)`
+  'Нэвтрэх',
+  style: TextStyle(
+    color: Colors.green[800], // Было Colors.blue
+    fontSize: 24, // Уменьшить до 24 для согласованности
+    fontWeight: FontWeight.bold,
+  ),
+),// <-- ЗАКРЫЛ `Text(...)`
 
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 20, 15, 50),
@@ -98,21 +102,21 @@ class _LoginScreenState extends State<LoginScreen>{
                                 LengthLimitingTextInputFormatter(100)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Имэйл",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                                filled: true,
-                                fillColor:Colors.grey.shade200,
-                                border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
-                                  borderRadius: BorderRadius.circular(40), // <-- Исправлено
-                                  borderSide: BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                ),
-                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
-                              ),
+  hintText: "Имэйл",
+  hintStyle: TextStyle(
+    color: Colors.grey[600], // Было Colors.grey
+  ),
+  filled: true,
+  fillColor: Colors.green[50], // Было Colors.grey.shade200
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12), // Было 40
+    borderSide: BorderSide(
+      width: 0,
+      style: BorderStyle.none,
+    ),
+  ),
+  prefixIcon: Icon(Icons.email_outlined, color: Colors.green[800]), // Было Icons.person, Colors.grey
+),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
@@ -141,33 +145,32 @@ class _LoginScreenState extends State<LoginScreen>{
                                 LengthLimitingTextInputFormatter(50)
                               ],
                               decoration: InputDecoration(
-                                hintText: "Нууц үг",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                                filled: true,
-                                fillColor:Colors.grey.shade200,
-                                border: OutlineInputBorder( // <-- ИСПРАВЛЕНО
-                                  borderRadius: BorderRadius.circular(40), // <-- Исправлено
-                                  borderSide: BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                ),
-                                prefixIcon: Icon(Icons.person, color:Colors.grey,),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                    color:Colors.grey,
-                                  ),
-                                  onPressed: (){
-                                    //update the state i.e toggle the state of passwordVisible variable
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
-                                  },
-                                )
-                              ),
+  hintText: "Нууц үг",
+  hintStyle: TextStyle(
+    color: Colors.grey[600], // Было Colors.grey
+  ),
+  filled: true,
+  fillColor: Colors.green[50], // Было Colors.grey.shade200
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12), // Было 40
+    borderSide: BorderSide(
+      width: 0,
+      style: BorderStyle.none,
+    ),
+  ),
+  prefixIcon: Icon(Icons.lock_outline, color: Colors.green[800]), // Было Icons.person, Colors.grey
+  suffixIcon: IconButton(
+    icon: Icon(
+      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+      color: Colors.green[800], // Было Colors.grey
+    ),
+    onPressed: () {
+      setState(() {
+        _passwordVisible = !_passwordVisible;
+      });
+    },
+  ),
+),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (text) {
                                 if(text == null || text.isEmpty){
@@ -190,12 +193,12 @@ class _LoginScreenState extends State<LoginScreen>{
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor:Colors.white, backgroundColor:Colors.blue,
-                          elevation: 0,
+                          foregroundColor:Colors.white, backgroundColor:Colors.green[800],
+                          elevation: 2,
                           shape:  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          minimumSize: Size(double.infinity, 50),
+                          minimumSize: Size(double.infinity, 48),
                         ),
                         onPressed: (){
                            _submit(); 
@@ -203,7 +206,8 @@ class _LoginScreenState extends State<LoginScreen>{
                          child: Text(
                           "Нэвтрэх",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 16, // Было 20
+      fontWeight: FontWeight.w600,
                           ),
                          )
                          ),
@@ -215,11 +219,12 @@ class _LoginScreenState extends State<LoginScreen>{
                             Navigator.push(context, MaterialPageRoute(builder: (c) => ForgotPasswordScreen()));
                           },
                           child: Text(
-                            "Нууц үгээ мартсан уу?",
-                            style: TextStyle(
-                              color:Colors.blue,
-                            ),
-                          )
+  "Нууц үгээ мартсан уу?",
+  style: TextStyle(
+    color: Colors.green[800], // Было Colors.blue
+    fontSize: 14, // Добавить для согласованности
+  ),
+),
                          ),
 
                           SizedBox(height: 20,),
@@ -228,12 +233,12 @@ class _LoginScreenState extends State<LoginScreen>{
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Бүртгэлгүй юу?",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                ),
-                              ),
+  "Бүртгэлгүй юу?",
+  style: TextStyle(
+    color: Colors.grey[600], // Было Colors.grey
+    fontSize: 14, // Было 15
+  ),
+),
 
                               SizedBox(width: 5,),
 
@@ -242,12 +247,13 @@ class _LoginScreenState extends State<LoginScreen>{
                                   Navigator.push(context, MaterialPageRoute(builder: (c) => RegisterScreen()));
                                 },
                                 child: Text(
-                                  "Бүртгүүлэх",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color:Colors.blue,
-                                   ),
-                                  ),
+  "Бүртгүүлэх",
+  style: TextStyle(
+    fontSize: 14, // Было 15
+    color: Colors.green[800], // Было Colors.blue
+    fontWeight: FontWeight.w600, // Добавить для согласованности
+  ),
+),
                                 ),
                               ],
                             ),
@@ -259,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen>{
                 ),
               ],
             ),
-          ],
+            ),),)
         ),
       ),
     );
